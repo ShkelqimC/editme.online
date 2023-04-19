@@ -1,50 +1,22 @@
-/* 
-1. Background (0dp elevation surface overlay) #FFFFFF
-2. Surface (with 1dp elevation surface overlay) #F2F2F2
-3. Primary #3700B3
-4. Secondary #6200EE
-5. On background #5C5C5C
-6. On Surface  #131313
-7. On Primary #D4D4D4
-8. On Secondary #FFFFFF
- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-body{
-background-color:  #DBDBDB;}
-.container{
-  height: 80px;
-  background-color: #FFFFFF;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 40px;
-  box-shadow: 0 3px rgba(0,0,0, 0.08);
+:root {
+  --background: #ffffff;
+  --surface: #f2f2f2;
+  --primary: #3700b3;
+  --secondary: #6200ee;
+  --onBackground: #5c5c5c;
+  --onSurface: #131313;
+  --onPrimary: #d4d4d4;
+  --onSecondary: #ffffff;
 }
-.navbarLeftSide h1{
-padding-right: 50px;
-}
-.navbarLeftSide a{
-font-size: 1.2rem;
-text-decoration: none;
-color: #5EA5FB
-}
-.navbarRightSide button{
-height: 40px;
-width: 120px;
-border-radius: 10px;
-
-}
-.navbarRightSide{
-  display: flex;
-align-items: center;
-gap: 10px;
-}
-.navbarLeftSide{
-display: flex;
-align-items: center;
-gap: 15px;
+body {
+  background-color: #dbdbdb;
 }
 
-*{
+* {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
