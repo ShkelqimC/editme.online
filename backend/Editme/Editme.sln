@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editme.DAL", "Editme.DAL\Ed
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editme.Entities", "Editme.Entities\Editme.Entities.csproj", "{F1059A9B-B1CD-4534-B360-8909D5EBE12D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editme.BusinessLayer", "Editme.BusinessLayer\Editme.BusinessLayer.csproj", "{0E3A0A30-4FCB-4614-AECC-69442C4CB963}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F1059A9B-B1CD-4534-B360-8909D5EBE12D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1059A9B-B1CD-4534-B360-8909D5EBE12D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1059A9B-B1CD-4534-B360-8909D5EBE12D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E3A0A30-4FCB-4614-AECC-69442C4CB963}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E3A0A30-4FCB-4614-AECC-69442C4CB963}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E3A0A30-4FCB-4614-AECC-69442C4CB963}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E3A0A30-4FCB-4614-AECC-69442C4CB963}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
