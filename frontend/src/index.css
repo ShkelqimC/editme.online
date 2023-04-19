@@ -11,6 +11,8 @@
   --onSurface: #131313;
   --onPrimary: #d4d4d4;
   --onSecondary: #ffffff;
+  --lightBlue: #5398fb;
+  --darkBlue: #1053b1;
 }
 body {
   background-color: #dbdbdb;
