@@ -9,19 +9,43 @@
 8. On Secondary #FFFFFF
  */
 
+body{
+background-color:  #DBDBDB;}
+.container{
+  height: 80px;
+  background-color: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-shadow: 0 3px rgba(0,0,0, 0.08);
+}
+.navbarLeftSide h1{
+padding-right: 50px;
+}
+.navbarLeftSide a{
+font-size: 1.2rem;
+text-decoration: none;
+color: #5EA5FB
+}
+.navbarRightSide button{
+height: 40px;
+width: 120px;
+border-radius: 10px;
 
-
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+}
+.navbarRightSide{
+  display: flex;
+align-items: center;
+gap: 10px;
+}
+.navbarLeftSide{
+display: flex;
+align-items: center;
+gap: 15px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
