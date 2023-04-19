@@ -1,3 +1,17 @@
+/* 
+1. Background (0dp elevation surface overlay) #FFFFFF
+2. Surface (with 1dp elevation surface overlay) #F2F2F2
+3. Primary #3700B3
+4. Secondary #6200EE
+5. On background #5C5C5C
+6. On Surface  #131313
+7. On Primary #D4D4D4
+8. On Secondary #FFFFFF
+ */
+
+
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
