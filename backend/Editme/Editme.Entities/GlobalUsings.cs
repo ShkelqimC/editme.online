@@ -4,7 +4,4 @@ global using System.Linq;
 global using System.Linq.Expressions;
 global using System.Text;
 global using System.Threading.Tasks;
-global using Microsoft.EntityFrameworkCore;
-global using Editme.DAL.Interfaces;
 global using Editme.Entities.Interfaces;
-global using Editme.DAL.Interfaces;
