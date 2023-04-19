@@ -1,6 +1,8 @@
 ﻿using Editme.BusinessLayer.Interfaces;
+using Editme.BusinessLayer.Utilities.CustomExceptions;
 using Editme.DAL.Interfaces;
 using Editme.Entities;
+using Editme.Entities.Dtos.UserDtos;
 
 namespace Editme.BusinessLayer.Concrete
 {
