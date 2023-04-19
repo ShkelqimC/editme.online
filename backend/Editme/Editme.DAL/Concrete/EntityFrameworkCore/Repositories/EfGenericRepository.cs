@@ -42,5 +42,6 @@ namespace Editme.DAL.Concrete.EntityFrameworkCore.Repositories
             _context.Update(entity);
             await _context.SaveChangesAsync();
         }
+
     }
 }

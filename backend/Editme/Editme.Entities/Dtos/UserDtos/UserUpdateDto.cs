@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Editme.Entities.Dtos.UserDtos
 {
-    public class UserDto : IDto
+    public class UserUpdateDto :IDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-        public string? Surname { get; set; }
-        public string Email { get; set; }
+        public string Surname { get; set; }
+        public string Email { get; set; } 
+        public string Password { get; set; }
     }
 }
