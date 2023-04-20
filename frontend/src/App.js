@@ -4,8 +4,7 @@ import { Navbar } from "./components/Navbar";
 function App() {
   return (
     <>
-      <Routes>
-        
+      <Routes>        
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<h1>About</h1>} /> 
         <Route path="/edit" element={<h1>Edit</h1>} />
