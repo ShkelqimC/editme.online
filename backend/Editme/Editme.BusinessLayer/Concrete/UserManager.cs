@@ -19,13 +19,17 @@ namespace Editme.BusinessLayer.Concrete
             _mapper = mapper;
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<UserDto> GetUserByEmail(string email)
         {
-            return await _userRepositoryDAL.GetByFilter(x => x.Email == email);
+            var getUser = await _userRepositoryDAL.GetByFilter(x => x.Email == email);
+
+            return _mapper.Map<UserDto>(getUser);
         }
-        public async Task<User> FindUserByName(string name)
+        public async Task<UserDto> FindUserByName(string name)
         {
-            return await _userRepositoryDAL.GetByFilter(x => x.Email == name);
+            var getUser = await _userRepositoryDAL.GetByFilter(x => x.Name == name);
+            var userDto= _mapper.Map<UserDto>(getUser);
+            return userDto;
         }
     }
 }

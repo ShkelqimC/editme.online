@@ -50,6 +50,22 @@ namespace Editme.API.Controllers
                 return BadRequest("Something went wrong");
             }
         }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetUserByName(string name)
+        {
+            try
+            {
+                return Ok(await _userService.FindUserByName(name));
+            }
+            catch (UserNotFoundException)
+            {
+                return NotFound("User not found");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Something went wrong");
+            }
+        }
         [HttpPost("[action]")]
         public async Task<IActionResult> AddUser(UserAddDto userToAddDTO)
         {
