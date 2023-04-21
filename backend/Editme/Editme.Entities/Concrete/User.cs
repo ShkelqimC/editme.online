@@ -1,4 +1,6 @@
-﻿namespace Editme.Entities
+﻿using Editme.Entities.Concrete;
+
+namespace Editme.Entities
 {
     public class User: ITable
     {
@@ -8,5 +10,6 @@
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
+        public List<AppUserRole> AppUserRoles { get; set; }
     }
 }

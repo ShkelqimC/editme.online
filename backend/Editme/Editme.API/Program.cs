@@ -6,6 +6,7 @@ using Editme.BusinessLayer.Utilities.DependenciesContainers;
 using Editme.BusinessLayer.Utilities.StringInfo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+//using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ClockSkew = TimeSpan.Zero //if server works another timeline it makes zero it
     };
 });
-builder.Services.AddControllers(); //Fluent Validation will be added here
+builder.Services.AddControllers(); //.AddFluentValidation();  //Fluent Validation will be added here
 
 builder.Services.AddDependencies();
 builder.Services.AddAutoMapper(typeof(MapProfile));
@@ -38,9 +39,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseExceptionHandler("/Error");
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
@@ -49,8 +52,10 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var appUserService = scope.ServiceProvider.GetRequiredService<IUserService>();
+    var appRoleUserService = scope.ServiceProvider.GetRequiredService<IAppUserRoleService>();
+    var appRoleService = scope.ServiceProvider.GetRequiredService<IAppRoleService>();
 
-    IdentityInitializer.Seed(appUserService).Wait();
+    IdentityInitializer.Seed(appUserService, appRoleUserService, appRoleService).Wait();
 }
 
 app.Run();

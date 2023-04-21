@@ -4,6 +4,7 @@ using Editme.BusinessLayer.Utilities.CustomExceptions;
 using Editme.DAL.Concrete.EntityFrameworkCore.Repositories;
 using Editme.DAL.Interfaces;
 using Editme.Entities;
+using Editme.Entities.Concrete;
 using Editme.Entities.Dtos.UserDtos;
 
 namespace Editme.BusinessLayer.Concrete
@@ -28,8 +29,22 @@ namespace Editme.BusinessLayer.Concrete
         public async Task<UserDto> FindUserByName(string name)
         {
             var getUser = await _userRepositoryDAL.GetByFilter(x => x.Name == name);
-            var userDto= _mapper.Map<UserDto>(getUser);
+            var userDto = _mapper.Map<UserDto>(getUser);
             return userDto;
+        }
+        public async Task<User> FindByUserName(string username)
+        {
+            return await _userRepositoryDAL.GetByFilter(x => x.UserName == username);
+        }
+
+        public async Task<bool> CheckPassword(UserLoginDto model)
+        {
+            var appUser = await _userRepositoryDAL.GetByFilter(x => x.UserName == model.UserName || x.Email == model.Email);
+            return appUser.Password == model.Password ? true : false;
+        }
+        public async Task<List<AppRole>> GetRolesByUserName(string userName)
+        {
+            return await _userRepositoryDAL.GetRolesByUserName(userName);
         }
     }
 }

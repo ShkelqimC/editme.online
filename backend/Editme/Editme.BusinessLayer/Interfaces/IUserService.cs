@@ -1,4 +1,5 @@
 ﻿using Editme.Entities;
+using Editme.Entities.Concrete;
 using Editme.Entities.Dtos.UserDtos;
 
 namespace Editme.BusinessLayer.Interfaces
@@ -8,5 +9,7 @@ namespace Editme.BusinessLayer.Interfaces
         Task<UserDto> GetUserByEmail(string email);
         Task<UserDto> FindUserByName(string name);
         Task<bool> CheckPassword(UserLoginDto model);
+        Task<User> FindByUserName(string username);
+        Task<List<AppRole>> GetRolesByUserName(string userName);
     }
 }
