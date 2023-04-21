@@ -15,7 +15,7 @@
   --darkBlue: #1053b1;
 }
 body {
-  background-color: #dbdbdb;
+  background-color: var(--background);
 }
 
 * {
