@@ -7,5 +7,6 @@ namespace Editme.BusinessLayer.Interfaces
     {
         Task<UserDto> GetUserByEmail(string email);
         Task<UserDto> FindUserByName(string name);
+        Task<bool> CheckPassword(UserLoginDto model);
     }
 }

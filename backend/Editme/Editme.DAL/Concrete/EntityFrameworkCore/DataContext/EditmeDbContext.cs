@@ -1,5 +1,6 @@
 ﻿using Editme.DAL.Concrete.EntityFrameworkCore.Mapping;
 using Editme.Entities;
+using Editme.Entities.Concrete;
 
 namespace Editme.DAL.Concrete.EntityFrameworkCore.DataContext
 {
@@ -12,17 +13,12 @@ namespace Editme.DAL.Concrete.EntityFrameworkCore.DataContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserMap());
-            modelBuilder.Entity<User>().HasData(
-                 new User
-                 {
-                     Id = 1,
-                     Email = "info@editme.online",
-                     Password = "123",
-                     Name = "John",
-                     Surname = "Doe",
-                 }
-             );
+            modelBuilder.ApplyConfiguration(new AppRoleMap());
+            modelBuilder.ApplyConfiguration(new AppUserRoleMap());
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<AppRole> AppRoles { get; set; }
+        public DbSet<AppUserRole> AppUserRoles { get; set; }
+
     }
 }
