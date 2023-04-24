@@ -49,7 +49,7 @@ export function DragDropImage() {
     <>
       {!imageUrl && (
         <div
-          className="images dropzone text-xl border-dashed border-2 border-black w-80 flex flex-col items-center justify-center mx-auto rounded-lg cursor-pointer"
+          className="text-xl border-dashed border-4 border-lightblue bg-gray dark:bg-blue w-full h-64 flex flex-col items-center justify-center mx-auto rounded-lg cursor-pointer"
           onDragOver={handleDragOver}
           onDrop={handleDrop}
           onClick={() => inputRef.current.click()}
