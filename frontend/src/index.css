@@ -11,8 +11,19 @@
   --onSurface: #131313;
   --onPrimary: #d4d4d4;
   --onSecondary: #ffffff;
+  
   --lightBlue: #5398fb;
   --darkBlue: #1053b1;
+
+  --darkBackground: #000000;
+  --darkSurface: #1e1e1e;
+  --darkPrimary: #bb86fc;
+  --darkSecondary: #03dac6;
+  --darkOnBackground: #c8c8c8;
+  --darkOnSurface: #dbdbdb;
+  --darkOnPrimary: #150e1d;
+  --darkOnSecondary: #00312c;
+
 }
 body {
   background-color: var(--background);
