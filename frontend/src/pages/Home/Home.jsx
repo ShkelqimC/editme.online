@@ -15,7 +15,7 @@ const Home = () => {
       fileReader.onload = (e) => {
         const { result } = e.target;
         if (result && !isCancel) {
-          setFileDataURL(result);
+          fileReader.setFileDataURL(result);
         }
       };
       fileReader.readAsDataURL(file);
@@ -44,53 +44,11 @@ const Home = () => {
         </div>
 
         <DragDropImage />
-        {/* <div
-          className={`images dropZone grid w-full  pl-3 ${
-            showDropZone ? "bg-gray-400 rounded-3xl pointer-events-none" : ""
-          } opacity-60 w-80 mx-auto`}
-          onDragOver={(e) => {
-            e.preventDefault();
-            // setShowDropZone(true)
-            //  console.log("onDragOV'ER")
-          }}
-          onDragEnter={(e) => {
-            e.preventDefault();
-            console.log("onENTER");
-            setShowDropZone(true);
-          }}
-          onDragLeave={(e) => {
-            e.preventDefault();
-            console.log("onLEAVE");
-            setShowDropZone(false);
-          }}
-          onDrop={drop}
-          // onClick={handleClick}
-        > */}
-        {/* {showDropZone ?  <h1 className={`text-3xl `}>Drop here</h1> :  <p className={`text-xl`}>Drag & drop your image here or click to upload</p>} */}
-        {/* </div> */}
+       
 
         <div className="examples bg-blue-300">div3</div>
 
-        {/* <form>
-          <p>
-          <label htmlFor='image'> Browse images  </label>
-          <input
-          type="file"
-          id='image'
-          accept='.png, .jpg, .jpeg'
-          onChange={changeHandler}
-          />
-          </p>
-          <p>
-          <input type="submit" label="Upload" />
-          </p>
-          </form>
-          {fileDataURL ?
-            <p className="img-preview-wrapper">
-            {
-              <img src={fileDataURL} alt="preview" />
-            }
-          </p> : null} */}
+     
       </div>
     </>
   );
