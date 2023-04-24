@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 // import "../index.css"
 
 export const Navbar = () => {
@@ -17,6 +17,5 @@ export const Navbar = () => {
 
 
     </div>
-   
-  )
-}
+  );
+};
