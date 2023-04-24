@@ -1,0 +1,38 @@
+.homeContainer {
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.5)
+    ),
+    url("https://cdn.pixabay.com/photo/2016/05/05/02/37/sunset-1373171__480.jpg");
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 2fr 1fr;
+  grid-template-areas:
+    "hero hero"
+    "images examples";
+  width: 100vw;
+  height: 80vh;
+  background-position: top center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.hero {
+  opacity: 1;
+  grid-area: hero;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.images {
+  grid-area: images;
+}
+.examples {
+  grid-area: examples;
+}
+.infoText span {
+  text-shadow: rgb(7, 7, 7) 1px 0 10px;
+  color: rgb(247, 201, 0);
+  font-weight: 700;
+}
