@@ -4,10 +4,10 @@
 
 @layer components {
   .active-state {
-    @apply font-bold  text-lightgray items-center px-2;
+    @apply font-bold  text-white items-center ;
   }
   .inactive-state {
-    @apply font-normal text-lightgray items-center px-2;
+    @apply font-normal text-lightgray items-center ;
   }
 
   .edit-active-state {
@@ -27,6 +27,9 @@
     --lightblack: #242124;
     --black: #0e0e10;
     --blue: #0F172A;
+    --violet: #7F00FF;
+    --lightviolet:#CF9FFF;
+    --darkviolet:#6200ee;
     --lightblue: #31bacd;
     --coral: #fc7b54;
 

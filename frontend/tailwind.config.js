@@ -24,6 +24,9 @@ module.exports = {
         blue: "var(--blue)",
         lightblue: "var(--lightblue)",
         coral: "var(--coral)",
+        violet: "var(--violet)",
+        lightviolet: "var(--lightviolet)",
+        darkviolet: "var(--darkviolet)",
       },
       gradientColorStops: {
         editMe: {
@@ -61,3 +64,5 @@ module.exports = {
 // --blue: #1a1463;
 // --lightblue: #31bacd;
 // --coral: #fc7b54;
+// --violet: #7F00FF;
+// --lightviolet:#CF9FFF;
