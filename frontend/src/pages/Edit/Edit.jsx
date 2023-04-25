@@ -4,84 +4,13 @@ import SideNavbarItem from "../../components/SideNavbarItem";
 import AdjustItem from "../../components/AdjustItem";
 import "./edit.css";
 import { Slider } from "../../components/Slider";
+import BottomAdjustItem from "../../components/BottomAdjustItem";
 
 const sideNavbar = [
   {
     name: "Adjust",
     path: "#adjust",
     icon: "",
-    default_values: [
-      {
-        name: "Brightness",
-        property: "brightness",
-        value: 100,
-        range: {
-          min: 0,
-          max: 200,
-        },
-        unit: "%",
-      },
-      {
-        name: "Contrast",
-        property: "contrast",
-        value: 100,
-        range: {
-          min: 0,
-          max: 200,
-        },
-        unit: "%",
-      },
-      {
-        name: "Saturation",
-        property: "saturation",
-        value: 100,
-        range: {
-          min: 0,
-          max: 200,
-        },
-        unit: "%",
-      },
-      {
-        name: "Grayscale",
-        property: "grayscale",
-        value: 0,
-        range: {
-          min: 0,
-          max: 100,
-        },
-        unit: "%",
-      },
-      {
-        name: "Sepia",
-        property: "sepia",
-        value: 0,
-        range: {
-          min: 0,
-          max: 200,
-        },
-        unit: "%",
-      },
-      {
-        name: "Hue Rotate",
-        property: "hue-rotate",
-        value: 0,
-        range: {
-          min: 0,
-          max: 360,
-        },
-        unit: "deg",
-      },
-      {
-        name: "Blur",
-        property: "blur",
-        value: 0,
-        range: {
-          min: 0,
-          max: 20,
-        },
-        unit: "px",
-      },
-    ],
   },
   {
     name: "Resolation",
@@ -114,65 +43,124 @@ const sideNavbar = [
     icon: "",
   },
 ];
+const default_Adjust_Values = [
+  {
+    name: "Brightness",
+    property: "brightness",
+    value: 100,
+    range: {
+      min: 0,
+      max: 200,
+    },
+    unit: "%",
+  },
+  {
+    name: "Contrast",
+    property: "contrast",
+    value: 100,
+    range: {
+      min: 0,
+      max: 200,
+    },
+    unit: "%",
+  },
+  {
+    name: "Saturation",
+    property: "saturate",
+    value: 100,
+    range: {
+      min: 0,
+      max: 200,
+    },
+    unit: "%",
+  },
+  {
+    name: "Grayscale",
+    property: "grayscale",
+    value: 0,
+    range: {
+      min: 0,
+      max: 100,
+    },
+    unit: "%",
+  },
+  {
+    name: "Sepia",
+    property: "sepia",
+    value: 0,
+    range: {
+      min: 0,
+      max: 200,
+    },
+    unit: "%",
+  },
+  {
+    name: "Hue Rotate",
+    property: "hue-rotate",
+    value: 0,
+    range: {
+      min: 0,
+      max: 360,
+    },
+    unit: "deg",
+  },
+  {
+    name: "Blur",
+    property: "blur",
+    value: 0,
+    range: {
+      min: 0,
+      max: 20,
+    },
+    unit: "px",
+  },
+];
 
 export function Edit(props, { imgUrl }) {
   const [options, setOptions] = useState(sideNavbar);
   const [selectedSideNavOptionIndex, setSelectedOptionIndex] = useState(0);
   const selectedSideNavOption = options[selectedSideNavOptionIndex];
 
+  const [adjustDefaultValues, setAdjustDefaultValues] = useState(
+    default_Adjust_Values
+  );
   const [bottomOption, setBottomOption] = useState();
   const [selectedBottomOptionIndex, setSelectedBottomOptionIndex] = useState(0);
-  const selectedBottomOption = selectedSideNavOption[selectedBottomOptionIndex];
+  const selectedBottomOption = adjustDefaultValues[selectedBottomOptionIndex];
 
   const [bottomSetting, setBottomSetting] = useState(null);
   let { state } = useLocation();
   const [imageUrl, setImageUrl] = useState();
-  const [activeSiedbarItem, setActiveSidebarItem] = useState();
+  const [activeSidebarItem, setActiveSidebarItem] = useState();
 
   useEffect(() => {
     setActiveSidebarItem(options[selectedSideNavOptionIndex]);
   }, selectedSideNavOptionIndex);
 
-  // debugger;
+  function handleSliderChange({ target }) {
+    setAdjustDefaultValues((prevAdjustDefaultValues) => {
+      return prevAdjustDefaultValues.map((option, index) => {
+        if (index !== selectedBottomOptionIndex) return option;
 
-  console.log(selectedBottomOption, "bottomoption");
-
-  function handleSliderChange(e, index, property, value) {
-    const test = options[selectedSideNavOption];
-    console.log(test, "test");
-
-    let optionCopy = [...options];
-
-    options[0].default_values[0][value] = e.target.value;
-
-    // return setOptions((prevOptions) => {
-    //   prevOptions.map((option, index) => {
-    //     debugger;
-    //     console.log(option, "option");
-    //     if (option.name !== activeSiedbarItem.name) return option;
-
-    //     var kk = option.filter((e, i) => {
-    //       return e.name === selectedBottomOption.name;
-    //     });
-    //     debugger;
-
-    //     option?.default_values?.map((o, i) => {
-    //       if (i === selectedBottomOptionIndex) {
-    //         o.value = target.value;
-    //       }
-    //     });
-    //   });
-    //   return { ...options };
-    // });
+        return { ...option, value: target.value };
+      });
+    });
   }
 
-  console.log(activeSiedbarItem, "active");
+  function getStyle() {
+    const filters = adjustDefaultValues.map((value, index) => {
+      return `${value.property}(${value.value}${value.unit})`;
+    });
+
+    return { filter: filters.join(" ") };
+  }
+  console.log(getStyle(), "style");
   return (
     <>
       <section className="flex">
         <aside
           className="w-64 max-h-screen p-6 sm:w-60 bg-blue text-lightgray dark:bg-black dark:text-lightgray"
-          style={{ height: "calc(100vh - 330px)" }}
+          // style={{ height: "calc(100vh - 330px)" }}
         >
           <nav className="space-y-8 text-sm">
             <div className="flex flex-row justify-evenly ">
@@ -360,14 +348,35 @@ export function Edit(props, { imgUrl }) {
         {/* //imageContainer flex items-center text-center justify-center mx-auto text-lightblack dark:bg-lightgray w-screen min-h-fit */}
         <div className="imageContainer">
           {state?.data?.url && (
-            <img src={state.data.url} className="editImage" />
+            <img
+              src={state.data.url}
+              className="editImage"
+              style={getStyle()}
+            />
           )}
         </div>
       </section>
       <nav className="p-4 bg-gray text-lightgray dark:bg-black dark:text-lightgray">
         <div className="container flex justify-between h-16 mx-auto md:justify-center flex-col items-center w-88">
           <ul className="items-stretch space-x-3 md:flex">
-            {activeSiedbarItem?.default_values !== undefined &&
+            {activeSidebarItem?.name === "Adjust" &&
+              default_Adjust_Values.map((item, index) => {
+                return (
+                  <li
+                    className={`edit-item ${
+                      index === selectedBottomOptionIndex ? "active" : ""
+                    }`}
+                  >
+                    <BottomAdjustItem
+                      key={index}
+                      name={item.name}
+                      active={index === selectedBottomOptionIndex}
+                      handleClick={() => setSelectedBottomOptionIndex(index)}
+                    />
+                  </li>
+                );
+              })}
+            {/* {activeSiedbarItem?.default_values !== undefined &&
               activeSiedbarItem?.default_values.map((item, index) => {
                 return (
                   <li
@@ -386,7 +395,7 @@ export function Edit(props, { imgUrl }) {
                     </button>
                   </li>
                 );
-              })}
+              })} */}
 
             {/* <li className="flex">
               <a

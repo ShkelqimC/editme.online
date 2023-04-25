@@ -8,13 +8,13 @@
   padding: 10px 5px;
   margin: 0;
   box-sizing: border-box;
+  font-size: 1.2rem;
 }
 .edit-item:hover,
 .edit-item:focus {
-  background-color: rgb(18, 21, 42);
 }
 .edit-item.active {
-  background-color: rgb(97, 69, 69);
+  border-bottom: 3px solid red;
 }
 .edit-item::after {
   margin: 0;
