@@ -1,8 +1,12 @@
 import { useLocation, Link } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
+import SideNavbarItem from "../../components/SideNavbarItem";
+import AdjustItem from "../../components/AdjustItem";
 
 export function Edit(props, { imgUrl }) {
   let { state } = useLocation();
+  const [imageUrl, setImageUrl] = useState();
+  const [activeSiedbarItem, setActiveSidebarItem] = useState();
 
   // debugger;
   console.log(state, "state");
@@ -19,6 +23,78 @@ export function Edit(props, { imgUrl }) {
       name: "Adjust",
       path: "#adjust",
       icon: "",
+      default_values: [
+        {
+          name: "Brightness",
+          property: "brightness",
+          value: 100,
+          range: {
+            min: 0,
+            max: 200,
+          },
+          unit: "%",
+        },
+        {
+          name: "Contrast",
+          property: "contrast",
+          value: 100,
+          range: {
+            min: 0,
+            max: 200,
+          },
+          unit: "%",
+        },
+        {
+          name: "Saturation",
+          property: "saturation",
+          value: 100,
+          range: {
+            min: 0,
+            max: 200,
+          },
+          unit: "%",
+        },
+        {
+          name: "Grayscale",
+          property: "grayscale",
+          value: 0,
+          range: {
+            min: 0,
+            max: 100,
+          },
+          unit: "%",
+        },
+        {
+          name: "Sepia",
+          property: "sepia",
+          value: 0,
+          range: {
+            min: 0,
+            max: 200,
+          },
+          unit: "%",
+        },
+        {
+          name: "Hue Rotate",
+          property: "hue-rotate",
+          value: 0,
+          range: {
+            min: 0,
+            max: 360,
+          },
+          unit: "deg",
+        },
+        {
+          name: "Blur",
+          property: "blur",
+          value: 0,
+          range: {
+            min: 0,
+            max: 20,
+          },
+          unit: "px",
+        },
+      ],
     },
     {
       name: "Text",
@@ -46,11 +122,12 @@ export function Edit(props, { imgUrl }) {
       icon: "",
     },
   ];
+  console.log(activeSiedbarItem, "active");
   return (
     <>
       <section className="flex">
         <aside
-          className="w-64 max-h-screen p-6 sm:w-60 bg-gray text-lightgray dark:bg-black dark:text-lightgray"
+          className="w-64 max-h-screen p-6 sm:w-60 bg-blue text-lightgray dark:bg-black dark:text-lightgray"
           style={{ height: "calc(100vh - 330px)" }}
         >
           <nav className="space-y-8 text-sm">
@@ -84,7 +161,11 @@ export function Edit(props, { imgUrl }) {
                     stroke="currentColor"
                     class="w-6 h-6"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                    />
                   </svg>
                   <span>Undo</span>
                 </div>
@@ -99,7 +180,11 @@ export function Edit(props, { imgUrl }) {
                     stroke="currentColor"
                     class="w-6 h-6"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3"
+                    />
                   </svg>
                   <span>Redo</span>
                 </div>
@@ -127,14 +212,11 @@ export function Edit(props, { imgUrl }) {
             <div className="space-y-2 ">
               <div className="flex flex-col space-y-5 px-10 text-start">
                 {sideNavbar.map((item, index) => (
-                  <Link
-                    to={item.path}
-                    className={({ isActive }) => (isActive ? "edit-active-state " : "edit-inactive-state")}
-                    key={index}
-                  >
-                    {item.icon}
-                    {item.name}
-                  </Link>
+                  <SideNavbarItem
+                    item={item}
+                    index={index}
+                    onClick={setActiveSidebarItem}
+                  />
                 ))}
               </div>
             </div>
@@ -229,19 +311,36 @@ export function Edit(props, { imgUrl }) {
         </aside>
         <div className="flex items-center text-center justify-center mx-auto text-lightblack dark:bg-lightgray w-screen min-h-fit">
           {state?.data?.url && <img src={state.data.url} className="image" />}
-          <h1>Testing</h1>
         </div>
       </section>
       <nav className="p-4 bg-gray text-lightgray dark:bg-black dark:text-lightgray">
-        <div className="container flex justify-between h-16 mx-auto md:justify-center">
+        <div className="container flex justify-between h-16 mx-auto md:justify-center flex-col items-center w-88">
           <ul className="items-stretch space-x-3 md:flex">
-            <li className="flex">
-              <a rel="noopener noreferrer" href="#" className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">
-                Link
+            {activeSiedbarItem?.default_values !== undefined &&
+              activeSiedbarItem?.default_values.map((item, index) => {
+                return (
+                  <li>
+                    <p>{item.name}</p>
+                  </li>
+                );
+              })}
+
+            {/* <li className="flex">
+              <a
+                rel="noopener noreferrer"
+                href="#"
+                className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent"
+              >
+                x
               </a>
-            </li>
-            <li className="flex">
-              <a rel="noopener noreferrer" href="#" className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">
+            </li> */}
+
+            {/*<li className="flex">
+              <a
+                rel="noopener noreferrer"
+                href="#"
+                className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent"
+              >
                 Link
               </a>
             </li>
@@ -253,8 +352,9 @@ export function Edit(props, { imgUrl }) {
               >
                 Link
               </a>
-            </li>
+            </li> */}
           </ul>
+          <input type="range" className="w-full" />
         </div>
       </nav>
     </>
