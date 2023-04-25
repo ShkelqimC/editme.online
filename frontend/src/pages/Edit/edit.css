@@ -1,0 +1,49 @@
+.edit-item {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  padding: 1rem;
+  position: relative;
+  transition: background-color 200ms;
+  padding: 10px 5px;
+  margin: 0;
+  box-sizing: border-box;
+}
+.edit-item:hover,
+.edit-item:focus {
+  background-color: rgb(18, 21, 42);
+}
+.edit-item.active {
+  background-color: rgb(97, 69, 69);
+}
+.edit-item::after {
+  margin: 0;
+  padding: 0;
+  content: "";
+  position: absolute;
+  width: 2px;
+  right: -10%;
+  height: 80%;
+  bottom: 10%;
+  background-color: rgb(18, 21, 42);
+}
+.edit-item:last-child::after {
+  display: none;
+}
+.edit-item button {
+  margin: 0;
+  padding: 0;
+}
+
+.editImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  margin: auto;
+}
+.imageContainer {
+  height: 80vh;
+  object-fit: center;
+  margin: auto;
+}

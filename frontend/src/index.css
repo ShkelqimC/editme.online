@@ -69,5 +69,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-
+}
+.sidebarItem.active {
+  color: red;
 }

@@ -1,19 +1,17 @@
-import { Link } from "react-router-dom";
-export default function SideNavbarItem({ item, index, onClick }) {
+export default function SideNavbarItem({ item, index, onClick, active }) {
   return (
-    <Link
-      to={item.path}
-      className={({ isActive }) =>
-        isActive ? "edit-active-state " : "edit-inactive-state"
-      }
+    <button
+      className={`sidebarItem ${active ? "active" : ""}`}
+      // className={({ isActive }) =>
+      //   isActive ? "edit-active-state " : "edit-inactive-state"
+      // }
       key={index}
       onClick={() => {
-        debugger;
         onClick(item);
       }}
     >
       {item.icon}
       {item.name}
-    </Link>
+    </button>
   );
 }
