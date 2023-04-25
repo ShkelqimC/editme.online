@@ -7,6 +7,7 @@ import SignIn from "./pages/SignIn/SignIn";
 import Register from "./pages/Register/Register";
 import GetInTouch from "./pages/GetInTouch/GetInTouch";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
@@ -28,9 +29,11 @@ function App() {
             <Route path="/getintouch" element={<GetInTouch />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
+            <ScrollToTop/>
           <Footer />
         </div>
       </BrowserRouter>
+      
     </div>
   );
 }

@@ -26,7 +26,7 @@
     --darkgray: #a9a9a9;
     --lightblack: #242124;
     --black: #0e0e10;
-    --blue: rgb(15 23 42);
+    --blue: #0F172A;
     --lightblue: #31bacd;
     --coral: #fc7b54;
 
@@ -52,6 +52,7 @@ body {
   background-color: var(--lightgray);
   color: var(--lightblack);
   overflow-x: hidden;
+  height: 100%;
 }
 /* html, body {height: 100%;} */
 /* #footer {height: 20%;} */
