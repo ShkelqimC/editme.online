@@ -47,3 +47,6 @@
   object-fit: center;
   margin: auto;
 }
+.sidebarItem.active {
+  color: green;
+}

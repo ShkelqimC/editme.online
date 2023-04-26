@@ -154,7 +154,6 @@ export function Edit(props, { imgUrl }) {
 
     return { filter: filters.join(" ") };
   }
-  console.log(getStyle(), "style");
   return (
     <>
       <section className="flex">
@@ -248,7 +247,7 @@ export function Edit(props, { imgUrl }) {
                     <SideNavbarItem
                       item={item}
                       index={index}
-                      onClick={setActiveSidebarItem}
+                      onClick={() => setSelectedOptionIndex(index)}
                       active={index === selectedSideNavOptionIndex}
                       options={item.default_values}
                     />
