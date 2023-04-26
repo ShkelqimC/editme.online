@@ -5,7 +5,7 @@ const Toggle = () => {
   const { theme, setTheme } = useContext(ThemeContext);
   return theme === "light" ? (
     <button
-      className="h-8 w-8 mr-4 last:mr-0 cursor-pointer text-lightgray"
+      className="h-8 w-8 mr-4 last:mr-0 cursor-pointer text-lightgray hover:text-white"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       <svg
@@ -25,7 +25,7 @@ const Toggle = () => {
     </button>
   ) : (
     <button
-      className="h-8 w-8 mr-4 last:mr-0 cursor-pointer  text-lightgray"
+      className="h-8 w-8 mr-4 last:mr-0 cursor-pointer  text-lightgray hover:text-white"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       <svg
