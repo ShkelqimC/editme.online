@@ -1,0 +1,13 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Linq.Expressions;
+global using System.Text;
+global using System.Threading.Tasks;
+global using EditMe.Online.Data.Mapping;
+global using EditMe.Online.Entities;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.AspNetCore.Mvc;
+global using System.Data;
+global using System.ComponentModel.DataAnnotations;
