@@ -4,7 +4,6 @@ global using System.Linq;
 global using System.Linq.Expressions;
 global using System.Text;
 global using System.Threading.Tasks;
-global using EditMe.Online.Data.Mapping;
 global using EditMe.Online.Entities;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
