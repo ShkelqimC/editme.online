@@ -9,7 +9,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 
     public AuthorizeAttribute(params Role[] roles)
     {
-        _roles = roles ?? new Role[] { };
+        _roles = roles ?? Array.Empty<Role>();
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
@@ -20,8 +20,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
             return;
 
         // authorization
-        var account = context.HttpContext.Items["Account"] as Account;
-        if (account == null || (_roles.Any() && !_roles.Contains(account.Role)))
+        if (context.HttpContext.Items["Account"] is not Account account || (_roles.Any() && !_roles.Contains(account.Role)))
         {
             // not logged in or role not authorized
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };

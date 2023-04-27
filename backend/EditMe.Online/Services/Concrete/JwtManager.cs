@@ -63,7 +63,7 @@ public class JwtManager : IJwtManager
         }
     }
 
-    public async Task<RefreshToken> GenerateRefreshToken(string ipAddress)
+    public async Task<RefreshToken> GenerateRefreshToken(/*string ipAddress*/)
     {
         var refreshToken = new RefreshToken
         {
@@ -71,14 +71,14 @@ public class JwtManager : IJwtManager
             Token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64)),
             Expires = DateTime.UtcNow.AddDays(7),
             Created = DateTime.UtcNow,
-            CreatedByIp = ipAddress
+            //CreatedByIp = ipAddress
         };
 
         // ensure token is unique by checking against db
         var tokenIsUnique = !_context.Accounts.Any(a => a.RefreshTokens.Any(t => t.Token == refreshToken.Token));
 
         if (!tokenIsUnique)
-            return await GenerateRefreshToken(ipAddress);
+            return await GenerateRefreshToken(/*ipAddress*/);
 
         return refreshToken;
     }

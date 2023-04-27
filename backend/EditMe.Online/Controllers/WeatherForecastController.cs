@@ -1,5 +1,7 @@
-namespace EditMe.Online.Controllers;
+using EditMe.Online.Authorization;
 
+namespace EditMe.Online.Controllers;
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase

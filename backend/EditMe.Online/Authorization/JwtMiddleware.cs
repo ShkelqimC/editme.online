@@ -9,7 +9,7 @@ public class JwtMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
+    public JwtMiddleware(RequestDelegate next)
     {
         _next = next;
     }
