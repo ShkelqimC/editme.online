@@ -1,23 +1,31 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useCallback } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Toggle from "./toggle";
 import { useEffect } from "react";
 import { useRef } from "react";
-import { logout } from "../features/userSlice";
+import { authActions } from "../_store";
+import { history } from "../_helpers/history";
 export const Navbar = () => {
   const ref = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [dropdown, setDropdown] = useState(false);
-  const user = useSelector((state) => state?.userData?.user);
+  // const user = useSelector((state) => state?.userData?.user);
+
+  const auth = useSelector((x) => x.auth.value);
+  // console.log("auth", auth);
   const dispatch = useDispatch();
+
+  
+  //check auth is exist or not
   useEffect(() => {
-    if (user) setIsLoggedin(true);
+    if (auth?.email) setIsLoggedin(true);
     else setIsLoggedin(false);
-  }, [user]);
-  const handleLogOut = useCallback(() => dispatch(logout()), [dispatch]);
+  }, []);
+
+  const handleLogOut = useCallback(() => dispatch(authActions.logout()), [dispatch]);
 
   const outsideClick = useCallback((e) => {
     if (!ref.current?.contains(e.target) && ref.current) setDropdown(false);
@@ -55,7 +63,7 @@ export const Navbar = () => {
 
     {
       name: "Settings",
-      path: "/settings",
+      path: "/usersettings",
       style: "block px-4 py-2 text-sm dark:text-lightgray dark:hover:text-white",
     },
     {
@@ -65,6 +73,9 @@ export const Navbar = () => {
       method: handleLogOut,
     },
   ];
+
+
+  
   return (
     <nav className="bg-blue text-lightgray select-none">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -76,7 +87,7 @@ export const Navbar = () => {
         </a>
         <div className="flex md:order-2 items-center">
           <Toggle />
-          {isLoggedin ? (
+          {auth ? (
             <>
               <button
                 type="button"
@@ -101,8 +112,8 @@ export const Navbar = () => {
                 id="user-dropdown"
               >
                 <div className="px-4 py-3">
-                  <span className="block text-sm dark:text-white">Bonnie Green</span>
-                  <span className="block text-sm truncate dark:text-lightgray">name@flowbite.com</span>
+                  <span className="block text-sm dark:text-white">{auth?.firstName}</span>
+                  <span className="block text-sm truncate dark:text-lightgray">{auth?.email}</span>
                 </div>
                 <ul className="py-2" aria-labelledby="user-menu-button">
                   {dropdownMenu.map((item, index) => (

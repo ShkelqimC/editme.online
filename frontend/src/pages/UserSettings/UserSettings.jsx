@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteUser } from "features";
+import { deleteUser } from "../../features/userSlice";
 const UserSettings = () => {
   const user = useSelector((state) => state?.userData?.user);
   const success = useSelector((state) => state?.userData?.success);

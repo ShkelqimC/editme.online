@@ -1,10 +1,50 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { axiosPublic, axiosPrivate } from "utils";
+import { createAsyncThunk, createSlice }from "@reduxjs/toolkit";
+import {axiosPublic,axiosPrivate} from "../_helpers/axiosUtils"
 
 const modulePrefix = "account";
 
+// Response body
+// {
+//   "id": 13,
+//   "firstName": "string",
+//   "lastName": "string",
+//   "email": "shenolyalmazosman@gmail.com",
+//   "role": "Admin",
+//   "created": "2023-04-28T15:34:57.6909547",
+//   "updated": null,
+//   "isVerified": true,
+//   "jwtToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzIiwibmJmIjoxNjgyNjk2MjE1LCJleHAiOjE2ODI2OTcxMTUsImlhdCI6MTY4MjY5NjIxNX0.untf1xQTOkJ2nxKUshPUzPIOXibidMc_Thm9FkNB6R4"
+// }
+
+// /api/account/authenticate  => login
+// /api/account/refresh-token => refresh token
+// /api/account/revoke-token  => logout
+// /api/account/register      => register
+// /api/account/verify-email  => verify email
+// /api/account/forgot-password => forgot password
+// /api/account/validate-reset-token => validate reset token
+// /api/account/reset-password => reset password
+
+// /api/account/ => admin only get all users
+// /api/account/ => admin only create user
+// /api/account/:id => get user by id
+// /api/account/:id =>update user
+// /api/account/:id => delete user
+
+function getCookie(key) {
+  var b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+  return b ? b.pop() : "";
+}
+
 const initialState = {
-  user: JSON.parse(localStorage?.getItem("EditMe-User-Info")) || null,
+  user:
+    JSON.parse(localStorage?.getItem("EditMe-User-Info")) || {
+      accessToken: "",
+      isAdmin: false,
+      refreshToken: "",
+      email: "",
+    } ||
+    null,
   email: "",
   password: "",
   success: false,
@@ -14,7 +54,7 @@ const initialState = {
 export const login = createAsyncThunk(`${modulePrefix}/`, async (_, { getState }) => {
   const state = getState();
 
-  const res = await axiosPublic.post("login", {
+  const res = await axiosPublic.post("authenticate", {
     email: state.userData.email,
     password: state.userData.password,
   });
@@ -43,7 +83,7 @@ export const logout = createAsyncThunk(`${modulePrefix}/logout`, async (_, { get
 export const deleteUser = createAsyncThunk(`${modulePrefix}/deleteUser`, async (id, { getState }) => {
   const state = getState();
 
-  const res = await axiosPrivate.delete(`users/${id}`, {
+  const res = await axiosPrivate.delete(`account/${id}`, {
     headers: { authorization: `Bearer ${state.userData.user?.accessToken}` },
   });
 
@@ -52,6 +92,8 @@ export const deleteUser = createAsyncThunk(`${modulePrefix}/deleteUser`, async (
 
 export const refreshToken = createAsyncThunk(`${modulePrefix}/refreshToken`, async (_, { getState }) => {
   const state = getState();
+
+  //getCookie("refreshToken")
 
   const res = await axiosPublic.post(`refresh`, {
     token: state.userData.user?.refreshToken,
@@ -109,3 +151,4 @@ export const userSlice = createSlice({
 });
 
 export const { updateUserName, updatePassword } = userSlice.actions;
+export default userSlice.reducer;
