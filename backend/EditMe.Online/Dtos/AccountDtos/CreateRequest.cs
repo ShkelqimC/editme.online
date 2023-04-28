@@ -1,14 +1,9 @@
 namespace EditMe.Online.Dtos.AccountDtos;
 public class CreateRequest
 {
-    [Required]
-    public string Title { get; set; }
+    public string? FirstName { get; set; }
 
-    [Required]
-    public string FirstName { get; set; }
-
-    [Required]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     [Required]
     [EnumDataType(typeof(Role))]
