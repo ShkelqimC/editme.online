@@ -1,17 +1,26 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React, { useState ,useCallback} from "react";
+import React, { useState, useCallback } from "react";
 import { NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import Toggle from "./toggle";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { logout } from "../features/userSlice";
 export const Navbar = () => {
   const ref = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [dropdown, setDropdown] = useState(false);
+  const user = useSelector((state) => state?.userData?.user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (user) setIsLoggedin(true);
+    else setIsLoggedin(false);
+  }, [user]);
+  const handleLogOut = useCallback(() => dispatch(logout()), [dispatch]);
 
   const outsideClick = useCallback((e) => {
-    if (!ref.current?.contains(e.target) && ref.current)  setDropdown(false);
+    if (!ref.current?.contains(e.target) && ref.current) setDropdown(false);
   }, []);
 
   useEffect(() => {
@@ -53,6 +62,7 @@ export const Navbar = () => {
       name: "Logout",
       path: "/logout",
       style: "block px-4 py-2 text-sm dark:text-lightgray dark:hover:text-white",
+      method: handleLogOut,
     },
   ];
   return (
@@ -96,7 +106,7 @@ export const Navbar = () => {
                 </div>
                 <ul className="py-2" aria-labelledby="user-menu-button">
                   {dropdownMenu.map((item, index) => (
-                    <li key={index}>
+                    <li key={index} onClick={item.method !== undefined || item.method !== null ? item.method : null}>
                       <NavLink to={item.path} className={item.style}>
                         {item.name}
                       </NavLink>

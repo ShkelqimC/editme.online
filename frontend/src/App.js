@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {  useSelector, useDispatch } from "react-redux";
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import { Navbar } from "./components/Navbar";
@@ -11,6 +12,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import FromBottomToTop from "./components/FromBottomToTop";
 
 function App() {
+  const user = useSelector((state) => state?.userData?.user);
   return (
     <div
       id="app"
