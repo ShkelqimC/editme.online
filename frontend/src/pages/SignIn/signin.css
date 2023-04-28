@@ -1,0 +1,28 @@
+.signinContainer {
+  height: 100vh;
+}
+.inputContainer {
+  border: 1px solid rgb(185, 185, 185);
+  height: 500px;
+  width: 600px;
+  margin: auto;
+  position: relative;
+  top: 350px;
+  border-radius: 5px;
+  padding: 40px 60px;
+}
+.signinHeader {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+/* .passwordInput::after {
+    content: "forgot password?";
+    display: inline-block;
+    width: 100px;
+    height: 10px;
+    color: black;
+    background-color: green;
+    font-weight: bold;
+    position: absolute;
+    top: 30px;
+  } */
