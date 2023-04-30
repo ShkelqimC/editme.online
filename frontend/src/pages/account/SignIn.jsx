@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 
-import { authActions } from "../../_store";
+import { login } from "../../_store";
 
 export default function SignIn() {
+  let navigate = useNavigate();
   const dispatch = useDispatch();
 
   // form validation rules
@@ -20,12 +21,12 @@ export default function SignIn() {
   const { register, handleSubmit, formState } = useForm(formOptions);
   const { errors, isSubmitting } = formState;
 
-  // const onSubmit = (data, e) => console.log(data, e);
   // const onError = (errors, e) => console.log(errors, e);
-  function onSubmit({ email, password }) {
-    return dispatch(authActions.login({ email, password }));
-  }
-  
+  const onSubmit = ({ email, password }) => {
+    navigate("/dashboard");
+    return dispatch(login({ email, password }));
+  };
+
   return (
     <section className="flex align-center justify-center">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 dark:bg-black dark:text-lightgray border-2">
@@ -40,16 +41,14 @@ export default function SignIn() {
                 Email address
               </label>
               <input
-                // value={email}
                 type="email"
                 placeholder="info@editme.online"
                 className={`form-control ${
                   errors.email ? "is-invalid" : ""
                 } w-full px-3 py-2 border border-black text-lightgray placeholder:text-lightgray rounded-md dark:border-lightblack`}
-                // onChange={(e) => handleEmailChange(e)}
                 {...register("email")}
               />
-              <div className="invalid-feedback">{errors.email?.message}</div>
+              <div className="text-red-400">{errors.email?.message}</div>
             </div>
             <div>
               <div className="flex justify-between mb-2">
@@ -61,33 +60,36 @@ export default function SignIn() {
                 </Link>
               </div>
               <input
-                // value={password}
                 type="password"
-                placeholder="*****"              
+                placeholder="*****"
                 className={`form-control ${
                   errors.username ? "is-invalid" : ""
                 } w-full px-3 py-2 border border-black text-lightgray placeholder:text-lightgray rounded-md dark:border-lightblack`}
-                // onChange={(e) => handlePasswordChange(e)}
                 {...register("password")}
               />
-              <div className="invalid-feedback">{errors.password?.message}</div>
+              <div className="text-red-400">{errors.password?.message}</div>
             </div>
           </div>
           <div className="space-y-2">
             <div>
-              <button
-                type="submit"
-                // disabled={isSubmitting}
-                className="w-full px-8 py-3 font-semibold rounded-md bg-coral dark:bg-coral"
-              >
-                {/* {isSubmitting && (
-                  <button type="button" className="bg-indigo-500 ..." disabled>
-                    <svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24"></svg>
-                    Submitting...
-                  </button>
-                )} */}
-                Sign in
-              </button>
+              {isSubmitting ? (
+                <button
+                  type="button"
+                  className="bg-indigo-500 w-full px-8 py-3 font-semibold rounded-md bg-coral dark:bg-coral"
+                  disabled
+                >
+                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"></svg>
+                  Submitting...
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full px-8 py-3 font-semibold rounded-md bg-coral dark:bg-coral"
+                >
+                  Sign in
+                </button>
+              )}
             </div>
             <p className="px-6 text-sm text-center">
               Don't have an account yet?

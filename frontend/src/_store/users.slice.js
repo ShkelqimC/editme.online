@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { authActions } from './';
-import { fetchWrapper } from '../_helpers';
-
+import { logout,setAuth } from './';
+import { fetchWrapper,setToken} from '../_helpers';
 // create slice
 
 const name = 'users';
@@ -68,10 +67,10 @@ function createExtraActions() {
                 if (id === auth?.id.toString()) {
                     // update local storage
                     const user = { ...auth, ...data };
-                    localStorage.setItem('auth', JSON.stringify(user));
+                    setToken(user)
 
                     // update auth user in redux state
-                    dispatch(authActions.setAuth(user));
+                    dispatch(setAuth(user));
                 }
             }
         );
@@ -86,7 +85,7 @@ function createExtraActions() {
 
                 // auto logout if the logged in user deleted their own record
                 if (id === getState().auth.value?.id) {
-                    dispatch(authActions.logout());
+                    dispatch(logout());
                 }
             }
         );

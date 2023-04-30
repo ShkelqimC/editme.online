@@ -16,6 +16,12 @@
   .edit-inactive-state {
     @apply font-normal text-coral items-center px-2;
   }
+  .dashboard-active-state {
+    @apply font-bold  text-white ;
+  }
+  .dashboard-inactive-state {
+    @apply font-normal text-lightgray ;
+  }
 }
 
 @layer base {

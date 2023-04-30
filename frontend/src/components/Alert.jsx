@@ -9,17 +9,17 @@ export default Alert;
 function Alert() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const alert = useSelector((x) => x.alert.value);
+  const alert = useSelector((x) => x.alert?.value);
 
   useEffect(() => {
     // clear alert on location change
     dispatch(alertActions.clear());
-  }, [location]);
+  }, [location,dispatch]);
 
   if (!alert) return null;
 
   return (
-    <div className="absolute top-10 left-2/4">
+    <div className="fixed top-10 left-2/4">
       <div className="m-3">
         <div
           className={`bg-red-100 border ${

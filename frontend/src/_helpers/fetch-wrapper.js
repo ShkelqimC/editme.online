@@ -1,4 +1,4 @@
-import { store, authActions } from '../_store';
+import { store, logout } from '../_store';
 
 export const fetchWrapper = {
     get: request('GET'),
@@ -36,7 +36,7 @@ function authHeader(url) {
 }
 
 function authToken() {
-    return store.getState().auth.value?.token;
+    return store.getState().auth?.auth?.jwtToken;
 }
 
 async function handleResponse(response) {
@@ -47,8 +47,8 @@ async function handleResponse(response) {
     if (!response.ok) {
         if ([401, 403].includes(response.status) && authToken()) {
             // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-            const logout = () => store.dispatch(authActions.logout());
-            logout();
+            const logOut = () => store.dispatch(logout());
+            logOut();
         }
 
         // get error message from body or default to response status

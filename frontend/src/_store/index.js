@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { alertReducer } from './alert.slice';
-import { authReducer } from './auth.slice';
+import authReducer from './auth.slice';
 import { usersReducer } from './users.slice';
 
 export * from './alert.slice';

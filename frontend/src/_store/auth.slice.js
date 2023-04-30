@@ -1,80 +1,129 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { alertActions } from "./";
-import { history, fetchWrapper } from "../_helpers";
-
+import { fetchWrapper, getToken, removeToken, setToken } from "../_helpers";
+import history from "../_helpers/history";
 // create slice
+const baseUrl = `${process.env.REACT_APP_API_URL_HTTPS}/api/account`;
 
-const name = "auth";
-const initialState = createInitialState();
-const reducers = createReducers();
-const extraActions = createExtraActions();
-const slice = createSlice({ name, initialState, reducers });
+const user=JSON.parse(getToken())||null;
+const initialState = {
+  loading: false,
+  auth:user,
+};
+export const login = createAsyncThunk("auth/login", async (payload) => {
+  const response = await fetchWrapper.post(`${baseUrl}/authenticate`, payload);
+  setToken(response);
+  return response;
+});
 
-// exports
+export const logout = createAsyncThunk("auth/signOut", async () => {
+  removeToken();
+});
 
-export const authActions = { ...slice.actions, ...extraActions };
-export const authReducer = slice.reducer;
+export const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    setAuth: (state, action) => {
+      state.auth = action.payload;
+    },
+  },
+  extraReducers: {
+    [logout.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.auth = {};
+      // state.auth?.jwtToken = null;
+    },
+    [login.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [login.fulfilled]: (state, action) => {
+      state.auth = action.payload;;
+      state.loading = false;
+    },
+    [login.rejected]: (state, action) => {
+      state.loading = false;
+    },
+  },
+});
 
-// implementation
+export const { setAuth } = authSlice.actions;
 
-function createInitialState() {
-  return {
-    // initialize state from local storage to enable user to stay logged in
-    value: JSON.parse(localStorage.getItem("auth")),
-  };
-}
+export default authSlice.reducer;
 
-function createReducers() {
-  return {
-    setAuth,
-  };
+//////////********************************************************** */
 
-  function setAuth(state, action) {
-    state.value = action.payload;
-  }
-}
+// const name = "auth";
+// const initialState = createInitialState();
+// const reducers = createReducers();
+// const extraActions = createExtraActions();
+// const slice = createSlice({ name, initialState, reducers });
 
-function createExtraActions() {
-  const baseUrl = `${process.env.REACT_APP_API_URL_HTTPS}/api/account`;
-  return {
-    login: login(),
-    logout: logout(),
-  };
+// // exports
 
-  function login() {
-    return createAsyncThunk(`${name}/login`, async function ({ email, password }, { dispatch }) {
-      dispatch(alertActions.clear());
-      try {
-        // debugger;
-        const user = await fetchWrapper.post(`${baseUrl}/authenticate`, { email, password });
-        // console.log("user", user);
-        // set auth user in redux state
-        dispatch(authActions.setAuth(user));
+// export const authActions = { ...slice.actions, ...extraActions };
+// export const authReducer = slice.reducer;
 
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem("auth", JSON.stringify(user));
+// // implementation
 
-        // TODO : fix alertActions or add tostify
-        // dispatch(alertActions.success('Login successful'));
-        // console.log("Login successful");
+// function createInitialState() {
+//   return {
+//     // initialize state from local storage to enable user to stay logged in
+//     value: getToken(),
+//   };
+// }
 
-        //TODO : history not working with app.js check later
-        // get return url from location state or default to home page
-        const { from } = history.location.state || { from: { pathname: "/dashboard" } };
-        history.navigate(from);
-      } catch (error) {
-        // dispatch(alertActions.error(error));
-        console.log("Login error", error)
-      }
-    });
-  }
+// function createReducers() {
+//   return {
+//     setAuth,
+//   };
 
-  function logout() {
-    return createAsyncThunk(`${name}/logout`, function (arg, { dispatch }) {
-      dispatch(authActions.setAuth(null));
-      localStorage.removeItem("auth");
-      history.navigate("/");
-    });
-  }
-}
+//   function setAuth(state, action) {
+//     state.value = action.payload;
+//   }
+// }
+
+// function createExtraActions() {
+//   const baseUrl = `${process.env.REACT_APP_API_URL_HTTPS}/api/account`;
+//   return {
+//     login: login(),
+//     logout: logout(),
+//   };
+
+//   function login() {
+//     return createAsyncThunk(`${name}/login`, async function ({ email, password }, { dispatch }) {
+//       dispatch(alertActions.clear());
+//       try {
+//         // debugger;
+//         const user = await fetchWrapper.post(`${baseUrl}/authenticate`, { email, password });
+//         // console.log("user", user);
+//         // set auth user in redux state
+//         dispatch(authActions.setAuth(user));
+
+//         // store user details and jwt token in local storage to keep user logged in between page refreshes
+//         setToken(user)
+
+//         // TODO : fix alertActions or add tostify
+//         // dispatch(alertActions.success('Login successful'));
+//         // console.log("Login successful");
+
+//         //TODO : history not working with app.js check later
+//         // get return url from location state or default to home page
+//         const { from } = history.location?.state || { from: { pathname: "/dashboard" } };
+//         history.navigate(from);
+//       } catch (error) {
+//         // dispatch(alertActions.error(error));
+//         console.log("Login error", error)
+//       }
+//     });
+//   }
+
+//   function logout() {
+//     return createAsyncThunk(`${name}/logout`, function (arg, { dispatch }) {
+//       dispatch(authActions.setAuth(null));
+//       removeToken()
+//       history.navigate("/");
+//     });
+//   }
+// }
