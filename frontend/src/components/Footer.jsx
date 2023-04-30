@@ -3,7 +3,7 @@ import Toggle from "./toggle";
 import { Link } from "react-router-dom";
 const Footer = () => {
   return (
-    <footer className="px-4 py-8 mt-10 bg-blue text-lightgray dark:bg-blue dark:text-lightgray select-none">
+    <footer className="px-4 py-8 bg-blue text-lightgray dark:bg-blue dark:text-lightgray select-none">
       <div className="container flex flex-wrap items-center justify-center mx-auto space-y-4 sm:justify-between sm:space-y-0">
         <div className="flex flex-row pr-3 space-x-4 sm:space-x-8">
         <Link href="/" className="flex items-center ">
