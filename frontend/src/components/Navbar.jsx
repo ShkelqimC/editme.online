@@ -24,7 +24,10 @@ export const Navbar = () => {
     else setIsLoggedin(false);
   }, [auth]);
 
-  const handleLogOut = useCallback(() => dispatch(logout()), [dispatch]);
+  const handleLogOut = useCallback(() => {
+    window.location.reload();
+    dispatch(logout());
+  }, [dispatch]);
 
   const outsideClick = useCallback((e) => {
     if (!ref.current?.contains(e.target) && ref.current) setDropdown(false);
@@ -120,7 +123,10 @@ export const Navbar = () => {
                 <ul className="py-2" aria-labelledby="user-menu-button">
                   {dropdownMenu.map((item, index) => (
                     <li key={index} onClick={item.method !== undefined || item.method !== null ? item.method : null}>
-                      <NavLink to={item.path} className={item.style + " flex items-center p-2 space-x-3 rounded-md"}>
+                      <NavLink
+                        to={item.path}
+                        className={item.style + " flex items-center p-2 space-x-3 rounded-md"}
+                      >
                         <span>{item.icon}</span>
                         <span>{item.name}</span>
                       </NavLink>

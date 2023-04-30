@@ -1,15 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { alertActions } from "./";
 import { fetchWrapper, getToken, removeToken, setToken } from "../_helpers";
 import history from "../_helpers/history";
 // create slice
 const baseUrl = `${process.env.REACT_APP_API_URL_HTTPS}/api/account`;
 
-const user=JSON.parse(getToken())||null;
+const user = JSON.parse(getToken()) || null;
 const initialState = {
   loading: false,
-  auth:user,
+  auth: user,
 };
 export const login = createAsyncThunk("auth/login", async (payload) => {
   const response = await fetchWrapper.post(`${baseUrl}/authenticate`, payload);
@@ -17,7 +16,13 @@ export const login = createAsyncThunk("auth/login", async (payload) => {
   return response;
 });
 
+export const forgotPassword= createAsyncThunk("auth/forgot-password", async (payload) => {
+  const response = await fetchWrapper.post(`${baseUrl}/reset-password`, payload);
+  return response;
+});
 export const logout = createAsyncThunk("auth/signOut", async () => {
+  var token = JSON.parse(getToken())?.jwtToken;
+  await fetchWrapper.post(`${baseUrl}/revoke-token`, { token });
   removeToken();
 });
 
@@ -39,10 +44,20 @@ export const authSlice = createSlice({
       state.loading = true;
     },
     [login.fulfilled]: (state, action) => {
-      state.auth = action.payload;;
+      state.auth = action.payload;
       state.loading = false;
     },
     [login.rejected]: (state, action) => {
+      state.loading = false;
+    },
+    [forgotPassword.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [forgotPassword.fulfilled]: (state, action) => {
+      state.auth = action.payload;
+      state.loading = false;
+    },
+    [forgotPassword.rejected]: (state, action) => {
       state.loading = false;
     },
   },

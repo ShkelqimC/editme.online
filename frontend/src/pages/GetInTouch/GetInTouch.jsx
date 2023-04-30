@@ -6,13 +6,13 @@ const GetInTouch = () => {
       {/* start intro */}
       <article className="py-6 dark:bg-violet-400 dark:text-gray-900">
         <div className="container mx-auto flex flex-col items-center justify-center p-4 space-y-8 md:p-10 md:px-24 xl:px-48">
-          <h1 className="text-5xl font-bold leading-none text-center">Something totally different</h1>
+          <h1 className="text-5xl font-bold leading-none text-center flex items-end">
+          <img src="/img/logo-colorful.png" alt="edit me logo" width={50}/>  
+          <span className="mx-4"> Editme.online</span></h1>
           <p className="pt-2 pb-8 text-xl font-medium text-center">
-            Eum omnis itaque harum at quae sequi unde similique alias asperiores totam. Ex cumque maxime harum doloremque, tempore
-            nam fugiat aspernatur rerum ipsa unde est modi commodi molestias maiores eveniet eius esse asperiores neque dicta ea
-            quisquam? Excepturi sapiente officiis explicabo ab?
+           is a fantastic online image, photo editor that I highly recommend to anyone in need of quick and easy editing. The user-friendly interface and powerful editing tools make it incredibly easy to crop, resize, and enhance images to perfection. I have been using Editme for a while now and it has made my image editing process so much more efficient and enjoyable. The website is responsive and works seamlessly on any device. I am so grateful for this amazing tool and I recommend it to anyone looking for a fast, reliable, and high-quality image editing solution.
           </p>
-          <button className="px-8 py-3 text-lg font-semibold rounded dark:bg-gray-800 dark:text-gray-50">Learn more</button>
+          <hr className="border-2 w-full"/>
         </div>
       </article>
       {/* endt intro*/}

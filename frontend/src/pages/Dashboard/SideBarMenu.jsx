@@ -9,7 +9,10 @@ const SideBarMenu = () => {
   const [isAdmin, setIsAdmin] = useState(true);
 
   // console.log("auth", auth);
-
+  const handleLogOut = () => {
+    window.location.reload();
+    dispatch(logout());
+  };
   //check auth is exist or not
   useEffect(() => {
     if (auth?.role === "Admin") setIsAdmin(true);
@@ -208,7 +211,7 @@ const SideBarMenu = () => {
             <Link
               to="/"
               className="flex items-center p-2 space-x-3 rounded-md dark:text-lightgray hover:text-white dark:hover:text-white"
-              onClick={() => dispatch(logout())}
+              onClick={handleLogOut()}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-5 h-5 fill-current dark:text-gray-400">
                 <path d="M440,424V88H352V13.005L88,58.522V424H16v32h86.9L352,490.358V120h56V456h88V424ZM320,453.642,120,426.056V85.478L320,51Z"></path>
