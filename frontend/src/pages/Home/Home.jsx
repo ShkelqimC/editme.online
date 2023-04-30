@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./home.css";
 import { DragDropImage } from "../../components/DragDropImage";
 import { Link } from "react-router-dom";
 
