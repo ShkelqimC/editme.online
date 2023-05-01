@@ -16,7 +16,6 @@ export function DragDropImage() {
 
   useEffect(() => {
     if (imageUrl !== null) {
-      debugger;
       navigate(`/Edit/${imageData.id}`, {
         state: {
           data: imageData,
@@ -25,10 +24,9 @@ export function DragDropImage() {
     }
   }, imageUrl);
 
-  const handleUpload = (event) => {
+  async function handleUpload(event) {
     const uploadedImage = event.target.files[0];
     const imgUrl = URL.createObjectURL(event.target.files[0]);
-    debugger;
     setImage(uploadedImage);
     setImageUrl(imgUrl);
     setImageData((prevImageData) => {
@@ -39,7 +37,7 @@ export function DragDropImage() {
         img: uploadedImage,
       };
     });
-  };
+  }
 
   const handleDrop = (event) => {
     event.preventDefault();
