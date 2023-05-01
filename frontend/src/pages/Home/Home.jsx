@@ -6,7 +6,7 @@ const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 const Home = () => {
   const [file, setFile] = useState(null);
-
+  // const img = useSelector((state) => state.editor.image);
   useEffect(() => {
     let fileReader,
       isCancel = false;
@@ -34,7 +34,9 @@ const Home = () => {
       <article className="text-gray-700 body-font h-screen flex align-center justify-center">
         <div className="container flex flex-col items-center px-5 py-16 mx-auto lg:px-20 lg:py-24 md:flex-row">
           <div className="flex flex-col items-center w-full pt-0 mb-16 text-left lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 md:items-start md:text-left md:mb-0 lg:text-center">
-            <h2 className="mb-1 text-xs font-medium tracking-widest text-blue-500 dark:text-white title-font">Atomic CSS Way</h2>
+            <h2 className="mb-1 text-xs font-medium tracking-widest text-blue-500 dark:text-white title-font">
+              Atomic CSS Way
+            </h2>
             <h1 className="mb-8 text-2xl font-bold tracking-tighter text-center text-blue-800 lg:text-left lg:text-5xl title-font">
               Longer medium lenght display headline to convert.
             </h1>
@@ -131,15 +133,27 @@ const Home = () => {
       {/* Start Hero*/}
       <article className="p-5 mx-auto sm:p-10 md:p-16 dark:bg-gray-800 dark:text-gray-100">
         <div className="flex flex-col max-w-3xl mx-auto overflow-hidden rounded">
-          <img src="https://source.unsplash.com/random/480x360" alt="" className="w-full h-60 sm:h-96 dark:bg-gray-500" />
+          <img
+            src="https://source.unsplash.com/random/480x360"
+            alt=""
+            className="w-full h-60 sm:h-96 dark:bg-gray-500"
+          />
           <div className="p-6 pb-12 m-4 mx-auto -mt-16 space-y-6 lg:max-w-2xl sm:px-10 sm:mx-12 lg:rounded-md dark:bg-gray-900">
             <div className="space-y-2">
-              <a rel="noopener noreferrer" href="#" className="inline-block text-2xl font-semibold sm:text-3xl">
+              <a
+                rel="noopener noreferrer"
+                href="#"
+                className="inline-block text-2xl font-semibold sm:text-3xl"
+              >
                 The Best Activewear from the Nordstrom Anniversary Sale
               </a>
               <p className="text-xs dark:text-gray-400">
                 By
-                <a rel="noopener noreferrer" href="#" className="text-xs hover:underline">
+                <a
+                  rel="noopener noreferrer"
+                  href="#"
+                  className="text-xs hover:underline"
+                >
                   Leroy Jenkins
                 </a>
               </p>
@@ -160,13 +174,20 @@ const Home = () => {
               Provident blanditiis cum exercitationem
             </h1>
             <p className="mt-6 mb-8 text-lg sm:mb-12 xl:max-w-3xl dark:text-gray-900">
-              Cupiditate minima voluptate temporibus quia? Architecto beatae esse ab amet vero eaque explicabo!
+              Cupiditate minima voluptate temporibus quia? Architecto beatae
+              esse ab amet vero eaque explicabo!
             </p>
             <div className="flex flex-wrap justify-center">
-              <button type="button" className="px-8 py-3 m-2 text-lg font-semibold rounded dark:bg-gray-800 dark:text-gray-50">
+              <button
+                type="button"
+                className="px-8 py-3 m-2 text-lg font-semibold rounded dark:bg-gray-800 dark:text-gray-50"
+              >
                 Get started
               </button>
-              <button type="button" className="px-8 py-3 m-2 text-lg border rounded dark:border-gray-700 dark:text-gray-900">
+              <button
+                type="button"
+                className="px-8 py-3 m-2 text-lg border rounded dark:border-gray-700 dark:text-gray-900"
+              >
                 Learn more
               </button>
             </div>
@@ -187,17 +208,21 @@ const Home = () => {
             <span className="text-sm">Basic</span>
             <p className="text-5xl font-bold text-center">39€</p>
             <p className="font-semibold text-center">
-              Nemo deserunt possimus quo provident recusandae! Dolores qui architecto omnis pariatur eos voluptatibus sequi cum,
-              non nesciunt aspernatur a?
+              Nemo deserunt possimus quo provident recusandae! Dolores qui
+              architecto omnis pariatur eos voluptatibus sequi cum, non nesciunt
+              aspernatur a?
             </p>
-            <button className="px-8 py-3 mt-6 text-lg font-semibold border rounded sm:mt-12 dark:border-gray-700">Sign up</button>
+            <button className="px-8 py-3 mt-6 text-lg font-semibold border rounded sm:mt-12 dark:border-gray-700">
+              Sign up
+            </button>
           </div>
           <div className="flex flex-col items-center justify-center flex-1 p-4 pb-8 text-center rounded-md sm:p-8 lg:p-16 dark:bg-violet-400 dark:text-gray-900">
             <span className="text-sm font-semibold">Advanced</span>
             <p className="text-5xl font-bold">89€</p>
             <p className="font-semibold">
-              Nemo deserunt possimus quo provident recusandae! Dolores qui architecto omnis pariatur eos voluptatibus sequi cum,
-              non nesciunt aspernatur a?
+              Nemo deserunt possimus quo provident recusandae! Dolores qui
+              architecto omnis pariatur eos voluptatibus sequi cum, non nesciunt
+              aspernatur a?
             </p>
             <button className="px-8 py-3 mt-6 text-lg font-semibold rounded sm:mt-12 dark:bg-gray-800 dark:text-gray-50">
               Sign up
@@ -232,11 +257,15 @@ const Home = () => {
             <h2 className="mb-5 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none">
               Everything you
               <br className="hidden md:block" />
-              can imagine <span className="inline-block text-deep-purple-accent-400">is real</span>
+              can imagine{" "}
+              <span className="inline-block text-deep-purple-accent-400">
+                is real
+              </span>
             </h2>
             <p className="pr-5 mb-5 text-base text-gray-700 md:text-lg">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
-              eaque ipsa quae. explicabo.
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+              quae. explicabo.
             </p>
             <div className="flex items-center">
               <a
@@ -263,10 +292,13 @@ const Home = () => {
         <div className="container px-6 py-12 mx-auto">
           <div className="grid items-center gap-4 xl:grid-cols-5">
             <div className="max-w-2xl mx-auto my-8 space-y-4 text-center xl:col-span-2 xl:text-left">
-              <h2 className="text-4xl font-bold">Duo assum utroque appetere an</h2>
+              <h2 className="text-4xl font-bold">
+                Duo assum utroque appetere an
+              </h2>
               <p className="dark:text-gray-400">
-                Pri ex magna scaevola moderatius. Nullam accommodare no vix, est ei diceret alienum, et sit cetero malorum. Et sea
-                iudico consequat, est sanctus adipisci ex.
+                Pri ex magna scaevola moderatius. Nullam accommodare no vix, est
+                ei diceret alienum, et sit cetero malorum. Et sea iudico
+                consequat, est sanctus adipisci ex.
               </p>
             </div>
             <div className="p-6 xl:col-span-3">
@@ -274,9 +306,12 @@ const Home = () => {
                 <div className="grid content-center gap-4">
                   <div className="p-6 rounded shadow-md dark:bg-gray-900">
                     <p>
-                      An audire commodo habemus cum. Ne sed corrumpit repudiandae. Tota aliquip democritum pro in, nec democritum
-                      intellegam ne. Propriae volutpat dissentiet ea sit, nec at lorem inani tritani, an ius populo perfecto
-                      vituperatoribus. Eu cum case modus salutandi, ut eum vocent sensibus reprehendunt.
+                      An audire commodo habemus cum. Ne sed corrumpit
+                      repudiandae. Tota aliquip democritum pro in, nec
+                      democritum intellegam ne. Propriae volutpat dissentiet ea
+                      sit, nec at lorem inani tritani, an ius populo perfecto
+                      vituperatoribus. Eu cum case modus salutandi, ut eum
+                      vocent sensibus reprehendunt.
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                       <img
@@ -286,15 +321,18 @@ const Home = () => {
                       />
                       <div>
                         <p className="text-lg font-semibold">Leroy Jenkins</p>
-                        <p className="text-sm dark:text-gray-400">CTO of Company Co.</p>
+                        <p className="text-sm dark:text-gray-400">
+                          CTO of Company Co.
+                        </p>
                       </div>
                     </div>
                   </div>
                   <div className="p-6 rounded shadow-md dark:bg-gray-900">
                     <p>
-                      Sit wisi sapientem ut, pri civibus temporibus voluptatibus et, ius cu hinc fabulas. Nam meliore minimum et,
-                      regione convenire cum id. Ex pro eros mucius consectetuer, pro magna nulla nonumy ne, eam putent iudicabit
-                      consulatu cu.
+                      Sit wisi sapientem ut, pri civibus temporibus voluptatibus
+                      et, ius cu hinc fabulas. Nam meliore minimum et, regione
+                      convenire cum id. Ex pro eros mucius consectetuer, pro
+                      magna nulla nonumy ne, eam putent iudicabit consulatu cu.
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                       <img
@@ -304,7 +342,9 @@ const Home = () => {
                       />
                       <div>
                         <p className="text-lg font-semibold">Leroy Jenkins</p>
-                        <p className="text-sm dark:text-gray-400">CTO of Company Co.</p>
+                        <p className="text-sm dark:text-gray-400">
+                          CTO of Company Co.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -312,9 +352,12 @@ const Home = () => {
                 <div className="grid content-center gap-4">
                   <div className="p-6 rounded shadow-md dark:bg-gray-900">
                     <p>
-                      Putant omnium elaboraret per ut. Id dicta tritani nominavi quo, mea id justo errem elaboraret. Agam mollis
-                      scripserit ea his, ut nec postea verear persecuti. Ea noster senserit eam, ferri omittantur ei nec. Id mel
-                      solet libris efficiantur, commune explicari et eos. Case movet ad est, sed tota vocent appetere ea.
+                      Putant omnium elaboraret per ut. Id dicta tritani nominavi
+                      quo, mea id justo errem elaboraret. Agam mollis scripserit
+                      ea his, ut nec postea verear persecuti. Ea noster senserit
+                      eam, ferri omittantur ei nec. Id mel solet libris
+                      efficiantur, commune explicari et eos. Case movet ad est,
+                      sed tota vocent appetere ea.
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                       <img
@@ -324,16 +367,22 @@ const Home = () => {
                       />
                       <div>
                         <p className="text-lg font-semibold">Leroy Jenkins</p>
-                        <p className="text-sm dark:text-gray-400">CTO of Company Co.</p>
+                        <p className="text-sm dark:text-gray-400">
+                          CTO of Company Co.
+                        </p>
                       </div>
                     </div>
                   </div>
                   <div className="p-6 rounded shadow-md dark:bg-gray-900">
                     <p>
-                      Te omnes virtute volutpat sed. Ei esse eros interesset vel, ei populo denique ocurreret vix, eu cum pertinax
-                      mandamus vituperatoribus. Solum nihil luptatum per ex, ei amet viderer eos. Ea illum labitur mnesarchum pro.
-                      Eius meis salutandi ei nam, alterum expetenda et nec. Expetenda intellegat at eum, per mazim sanctus
-                      honestatis ad. Ei noluisse invenire vix. Te ancillae patrioque qui, probo bonorum vivendum ex vim.
+                      Te omnes virtute volutpat sed. Ei esse eros interesset
+                      vel, ei populo denique ocurreret vix, eu cum pertinax
+                      mandamus vituperatoribus. Solum nihil luptatum per ex, ei
+                      amet viderer eos. Ea illum labitur mnesarchum pro. Eius
+                      meis salutandi ei nam, alterum expetenda et nec. Expetenda
+                      intellegat at eum, per mazim sanctus honestatis ad. Ei
+                      noluisse invenire vix. Te ancillae patrioque qui, probo
+                      bonorum vivendum ex vim.
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                       <img
@@ -343,7 +392,9 @@ const Home = () => {
                       />
                       <div>
                         <p className="text-lg font-semibold">Leroy Jenkins</p>
-                        <p className="text-sm dark:text-gray-400">CTO of Company Co.</p>
+                        <p className="text-sm dark:text-gray-400">
+                          CTO of Company Co.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -359,9 +410,12 @@ const Home = () => {
       <article className="homeContainer m-auto text-center py-10">
         <div className="hero p-8">
           <div className="leftHero flex justify-center flex-col">
-            <h1 className="text-5xl ">Free & easy to use online image editor</h1>
+            <h1 className="text-5xl ">
+              Free & easy to use online image editor
+            </h1>
             <p className="infoText text-xl pt-4">
-              Edit your photos, add photo effects, text and more with just a few clicks. No popups, no ads.<span>100% free </span>{" "}
+              Edit your photos, add photo effects, text and more with just a few
+              clicks. No popups, no ads.<span>100% free </span>{" "}
             </p>
           </div>
         </div>
@@ -375,13 +429,18 @@ const Home = () => {
       {/* Start signup */}
       <article className="py-6 dark:bg-gray-800 dark:text-gray-50">
         <div className="container mx-auto flex flex-col items-center justify-center p-4 space-y-8 md:p-10 md:px-24 xl:px-48">
-          <h1 className="text-5xl font-bold leading-none text-center">Sign up now</h1>
+          <h1 className="text-5xl font-bold leading-none text-center">
+            Sign up now
+          </h1>
           <p className="text-xl font-medium text-center">
-            At a assumenda quas cum earum ut itaque commodi saepe rem aspernatur quam natus quis nihil quod, hic explicabo
-            doloribus magnam neque, exercitationem eius sunt!
+            At a assumenda quas cum earum ut itaque commodi saepe rem aspernatur
+            quam natus quis nihil quod, hic explicabo doloribus magnam neque,
+            exercitationem eius sunt!
           </p>
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
-            <button className="px-8 py-3 text-lg font-semibold rounded dark:bg-violet-400 dark:text-gray-900">Get started</button>
+            <button className="px-8 py-3 text-lg font-semibold rounded dark:bg-violet-400 dark:text-gray-900">
+              Get started
+            </button>
             <button className="px-8 py-3 text-lg font-normal border rounded dark:bg-gray-100 dark:text-gray-900 dark:border-gray-300">
               Learn more
             </button>

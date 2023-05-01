@@ -1,15 +1,30 @@
 import { useLocation, Link } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SideNavbarItem from "../../components/SideNavbarItem";
 import AdjustItem from "../../components/AdjustItem";
 import "./edit.css";
 import { Slider } from "../../components/Slider";
 import BottomAdjustItem from "../../components/BottomAdjustItem";
+import Cropper from "react-easy-crop";
+
+import {
+  zustandstore,
+  selectedBottomOption,
+  selectedSideNavOption,
+  useActions,
+  hasChangedStyles,
+  adjust,
+} from "../../app/store";
 
 const sideNavbar = [
   {
     name: "Adjust",
     path: "#adjust",
+    icon: "",
+  },
+  {
+    name: "Crop",
+    path: "",
     icon: "",
   },
   {
@@ -20,11 +35,6 @@ const sideNavbar = [
   {
     name: "Text",
     path: "#text",
-    icon: "",
-  },
-  {
-    name: "Adjust",
-    path: "#adjust",
     icon: "",
   },
   {
@@ -43,117 +53,63 @@ const sideNavbar = [
     icon: "",
   },
 ];
-const default_Adjust_Values = [
-  {
-    name: "Brightness",
-    property: "brightness",
-    value: 100,
-    range: {
-      min: 0,
-      max: 200,
-    },
-    unit: "%",
-  },
-  {
-    name: "Contrast",
-    property: "contrast",
-    value: 100,
-    range: {
-      min: 0,
-      max: 200,
-    },
-    unit: "%",
-  },
-  {
-    name: "Saturation",
-    property: "saturate",
-    value: 100,
-    range: {
-      min: 0,
-      max: 200,
-    },
-    unit: "%",
-  },
-  {
-    name: "Grayscale",
-    property: "grayscale",
-    value: 0,
-    range: {
-      min: 0,
-      max: 100,
-    },
-    unit: "%",
-  },
-  {
-    name: "Sepia",
-    property: "sepia",
-    value: 0,
-    range: {
-      min: 0,
-      max: 200,
-    },
-    unit: "%",
-  },
-  {
-    name: "Hue Rotate",
-    property: "hue-rotate",
-    value: 0,
-    range: {
-      min: 0,
-      max: 360,
-    },
-    unit: "deg",
-  },
-  {
-    name: "Blur",
-    property: "blur",
-    value: 0,
-    range: {
-      min: 0,
-      max: 20,
-    },
-    unit: "px",
-  },
-];
 
-export function Edit(props, { imgUrl }) {
-  const [options, setOptions] = useState(sideNavbar);
-  const [selectedSideNavOptionIndex, setSelectedOptionIndex] = useState(0);
-  const selectedSideNavOption = options[selectedSideNavOptionIndex];
+export function Edit() {
+  const bottomOption = zustandstore((state) => state.adjust);
 
-  const [adjustDefaultValues, setAdjustDefaultValues] = useState(
-    default_Adjust_Values
-  );
-  const [bottomOption, setBottomOption] = useState();
-  const [selectedBottomOptionIndex, setSelectedBottomOptionIndex] = useState(0);
-  const selectedBottomOption = adjustDefaultValues[selectedBottomOptionIndex];
+  const [
+    selectedBottomOption,
+    setSelectedBottomOption,
+    setSliderValue,
+    selectedSideNavOption,
+    setSelectedSideNavOption,
+    resetStyles,
+    hasChangedStyles,
+  ] = zustandstore((state) => [
+    state.selectedBottomOption,
+    state.setSelectedBottomOption,
+    state.setSliderValue,
+    state.selectedSideNavOption,
+    state.setSelectedSideNavOption,
+    state.resetStyles,
+    state.hasChangedStyles,
+  ]);
 
-  const [bottomSetting, setBottomSetting] = useState(null);
+  const actions = useActions();
+
+  // const [
+  //   setSelectedBottomOption,
+  //   setSliderValue,
+  //   selectedSideNavOption,
+  //   resetStyles,
+  //   hasChangedStyles,
+  //   setSelectedSideNavOption,
+  // ] = [
+  //   selectedBottomOption(),
+  //   actions.setSliderValue(),
+  //   actions.setSelectedSideNavOption(),
+  //   actions.resetStyles(),
+  //   actions.setSelectedSideNavOption(),
+  // ];
   let { state } = useLocation();
-  const [imageUrl, setImageUrl] = useState();
-  const [activeSidebarItem, setActiveSidebarItem] = useState();
 
-  useEffect(() => {
-    setActiveSidebarItem(options[selectedSideNavOptionIndex]);
-  }, selectedSideNavOptionIndex);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {},
+  []);
 
   function handleSliderChange({ target }) {
-    setAdjustDefaultValues((prevAdjustDefaultValues) => {
-      return prevAdjustDefaultValues.map((option, index) => {
-        if (index !== selectedBottomOptionIndex) return option;
-
-        return { ...option, value: target.value };
-      });
-    });
+    setSliderValue(target.value);
   }
 
   function getStyle() {
-    const filters = adjustDefaultValues.map((value, index) => {
-      return `${value.property}(${value.value}${value.unit})`;
-    });
+    var filters = Object.values(bottomOption).map(
+      (value, index) => `${value.property}(${value.value}${value.unit})`
+    );
 
     return { filter: filters.join(" ") };
   }
+  function onZoomChange() {}
   return (
     <>
       <section className="flex">
@@ -240,6 +196,7 @@ export function Edit(props, { imgUrl }) {
                 </div>
               </Link>
             </div>
+
             <div className="space-y-2 ">
               <div className="flex flex-col space-y-5 px-10 text-start">
                 {sideNavbar.map((item, index) => {
@@ -247,8 +204,8 @@ export function Edit(props, { imgUrl }) {
                     <SideNavbarItem
                       item={item}
                       index={index}
-                      onClick={() => setSelectedOptionIndex(index)}
-                      active={index === selectedSideNavOptionIndex}
+                      onClick={() => setSelectedSideNavOption(item.name)}
+                      active={selectedSideNavOption === item.name}
                       options={item.default_values}
                     />
                   );
@@ -344,9 +301,23 @@ export function Edit(props, { imgUrl }) {
             </div>
           </nav>
         </aside>
-        {/* //imageContainer flex items-center text-center justify-center mx-auto text-lightblack dark:bg-lightgray w-screen min-h-fit */}
+
         <div className="imageContainer">
-          {state?.data?.url && (
+          {selectedSideNavOption === "Crop" && (
+            <Cropper
+              image={state.data?.url}
+              style={{ mediaStyle: getStyle() }}
+              crop={crop}
+              zoom={zoom}
+              aspect={4 / 3}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+              // disableAutomaticStylesInjection={true}
+              mediaProps={<img />}
+            />
+          )}
+          {selectedSideNavOption === "Adjust" && (
             <img
               src={state.data.url}
               className="editImage"
@@ -358,80 +329,32 @@ export function Edit(props, { imgUrl }) {
       <nav className="p-4 bg-gray text-lightgray dark:bg-black dark:text-lightgray">
         <div className="container flex justify-between h-16 mx-auto md:justify-center flex-col items-center w-88">
           <ul className="items-stretch space-x-3 md:flex">
-            {activeSidebarItem?.name === "Adjust" &&
-              default_Adjust_Values.map((item, index) => {
+            {selectedSideNavOption === "Adjust" &&
+              Object.keys(bottomOption).map((item, index) => {
                 return (
                   <li
                     className={`edit-item ${
-                      index === selectedBottomOptionIndex ? "active" : ""
+                      item === selectedBottomOption ? "active" : ""
                     }`}
                   >
                     <BottomAdjustItem
                       key={index}
-                      name={item.name}
-                      active={index === selectedBottomOptionIndex}
-                      handleClick={() => setSelectedBottomOptionIndex(index)}
+                      name={item}
+                      active={item === selectedBottomOption}
+                      handleClick={() => setSelectedBottomOption(item)}
                     />
                   </li>
                 );
               })}
-            {/* {activeSiedbarItem?.default_values !== undefined &&
-              activeSiedbarItem?.default_values.map((item, index) => {
-                return (
-                  <li
-                    className={`edit-item ${
-                      index === selectedBottomOptionIndex ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className={``}
-                      key={index}
-                      name={item.name}
-                      active={index === selectedBottomOptionIndex}
-                      onClick={() => setSelectedBottomOptionIndex(index)}
-                    >
-                      {item.name}
-                    </button>
-                  </li>
-                );
-              })} */}
-
-            {/* <li className="flex">
-              <a
-                rel="noopener noreferrer"
-                href="#"
-                className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent"
-              >
-                x
-              </a>
-            </li> */}
-
-            {/*<li className="flex">
-              <a
-                rel="noopener noreferrer"
-                href="#"
-                className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent"
-              >
-                Link
-              </a>
-            </li>
-            <li className="flex">
-              <a
-                rel="noopener noreferrer"
-                href="#"
-                className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent dark:text-lightblue dark:border-lightblue"
-              >
-                Link
-              </a>
-            </li> */}
           </ul>
           <Slider
-            min={selectedBottomOption?.range?.min}
-            max={selectedBottomOption?.range?.max}
-            value={selectedBottomOption?.value}
-            name={selectedBottomOption?.name}
+            min={bottomOption[selectedBottomOption]?.range?.min}
+            max={bottomOption[selectedBottomOption]?.range?.max}
+            value={bottomOption[selectedBottomOption]?.value}
+            name={selectedBottomOption}
             handleChange={handleSliderChange}
           />
+          {hasChangedStyles && <button onClick={resetStyles}>reset</button>}
         </div>
       </nav>
     </>

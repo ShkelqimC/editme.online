@@ -24,7 +24,7 @@ export function DragDropImage() {
     }
   }, imageUrl);
 
-  const handleUpload = (event) => {
+  async function handleUpload(event) {
     const uploadedImage = event.target.files[0];
     const imgUrl = URL.createObjectURL(event.target.files[0]);
     setImage(uploadedImage);
@@ -37,7 +37,7 @@ export function DragDropImage() {
         img: uploadedImage,
       };
     });
-  };
+  }
 
   const handleDrop = (event) => {
     event.preventDefault();

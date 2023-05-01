@@ -46,6 +46,8 @@
   height: 80vh;
   object-fit: center;
   margin: auto;
+  position: relative;
+  width: 80vh;
 }
 .sidebarItem.active {
   color: green;
