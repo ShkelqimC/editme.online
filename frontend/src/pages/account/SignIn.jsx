@@ -19,12 +19,13 @@ export default function SignIn() {
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, formState } = useForm(formOptions);
-  const { errors, isSubmitting } = formState;
+  const { errors } = formState;
 
   // const onError = (errors, e) => console.log(errors, e);
   const onSubmit = ({ email, password }) => {
+    debugger
+    dispatch(login({ email, password }));
     navigate("/dashboard");
-    return dispatch(login({ email, password }));
   };
 
   return (
@@ -72,24 +73,12 @@ export default function SignIn() {
           </div>
           <div className="space-y-2">
             <div>
-              {isSubmitting ? (
-                <button
-                  type="button"
-                  className="bg-indigo-500 w-full px-8 py-3 font-semibold rounded-md bg-coral dark:bg-coral"
-                  disabled
-                >
-                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"></svg>
-                  Submitting...
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full px-8 py-3 font-semibold rounded-md bg-coral dark:bg-coral"
-                >
-                  Sign in
-                </button>
-              )}
+              <button
+                type="submit"
+                className="w-full py-3 font-semibold rounded-md bg-coral hover:text-white hover:shadow-lg dark:bg-coral"
+              >
+                Sign in
+              </button>
             </div>
             <p className="px-6 text-sm text-center">
               Don't have an account yet?
@@ -98,6 +87,14 @@ export default function SignIn() {
                 Sign up
               </Link>
               .
+            </p>
+            <p className="px-6 text-xs text-center mt-5 font-extrabold">
+              You have token but not verified yet?
+              <Link to="/verify-email-token" className="hover:underline font-bold text-coral dark:text-coral">
+                {" "}
+                Verify now
+              </Link>
+              !
             </p>
           </div>
         </form>

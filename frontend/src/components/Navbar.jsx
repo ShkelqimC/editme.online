@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useCallback } from "react";
 import { NavLink, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,8 +24,8 @@ export const Navbar = () => {
   }, [auth]);
 
   const handleLogOut = useCallback(() => {
-    window.location.reload();
     dispatch(logout());
+    window.location.reload();
   }, [dispatch]);
 
   const outsideClick = useCallback((e) => {
@@ -67,6 +66,48 @@ export const Navbar = () => {
         </svg>
       ),
     },
+    // {
+    //   name: "Verify Email Token",
+    //   path: "/verify-email-token",
+    //   style: "block px-4 py-2 text-sm dark:text-lightgray dark:hover:text-white",
+    //   icon: (
+    //     <svg
+    //       xmlns="http://www.w3.org/2000/svg"
+    //       fill="none"
+    //       viewBox="0 0 24 24"
+    //       strokeWidth="1.5"
+    //       stroke="currentColor"
+    //       className="w-6 h-6"
+    //     >
+    //       <path
+    //         strokeLinecap="round"
+    //         strokeLinejoin="round"
+    //         d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+    //       />
+    //     </svg>
+    //   ),
+    // },
+    // {
+    //   name: "Resend Verify Token",
+    //   path: "/resend-verify-token",
+    //   style: "block px-4 py-2 text-sm dark:text-lightgray dark:hover:text-white",
+    //   icon: (
+    //     <svg
+    //       xmlns="http://www.w3.org/2000/svg"
+    //       fill="none"
+    //       viewBox="0 0 24 24"
+    //       strokeWidth="1.5"
+    //       stroke="currentColor"
+    //       className="w-6 h-6"
+    //     >
+    //       <path
+    //         strokeLinecap="round"
+    //         strokeLinejoin="round"
+    //         d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0l-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.98l7.5-4.04a2.25 2.25 0 012.134 0l7.5 4.04a2.25 2.25 0 011.183 1.98V19.5z"
+    //       />
+    //     </svg>
+    //   ),
+    // },
     {
       name: "Logout",
       path: "/",
@@ -105,7 +146,7 @@ export const Navbar = () => {
                 ref={ref}
               >
                 <span className="sr-only">Open user menu</span>
-                <img className="w-8 h-8 rounded-full" src="https://source.unsplash.com/40x40/?portrait?1" alt="user photo" />
+                <img className="w-8 h-8 rounded-full bg-lightgray" src="/img/user-profile.png" alt="user" />
               </button>
               <div
                 className={`absolute top-14 right-4 mt-2 z-50 my-4 text-lightblack list-none bg-white border-2 divide-y divide-lightblack rounded-lg shadow dark:bg-black dark:divide-lightgray ${
@@ -123,10 +164,7 @@ export const Navbar = () => {
                 <ul className="py-2" aria-labelledby="user-menu-button">
                   {dropdownMenu.map((item, index) => (
                     <li key={index} onClick={item.method !== undefined || item.method !== null ? item.method : null}>
-                      <NavLink
-                        to={item.path}
-                        className={item.style + " flex items-center p-2 space-x-3 rounded-md"}
-                      >
+                      <NavLink to={item.path} className={item.style + " flex items-center p-2 space-x-3 rounded-md"}>
                         <span>{item.icon}</span>
                         <span>{item.name}</span>
                       </NavLink>

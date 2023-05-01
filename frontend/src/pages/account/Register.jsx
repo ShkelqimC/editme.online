@@ -4,45 +4,39 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 
-import history from "../../_helpers/history";
-import { userActions, alertActions } from "../../_store";
+import { registerUser } from "../../_store";
 
 export default function Register() {
   const dispatch = useDispatch();
-const navigate = useNavigate();
+  const navigate = useNavigate();
   // form validation rules
   const validationSchema = Yup.object().shape({
+    firstName: Yup.string().uppercase(),
+    lastName: Yup.string().uppercase(),
     email: Yup.string().required("Username is required"),
     password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
-    repassword: Yup.string()
+    confirmPassword: Yup.string()
       .required("Confirm Password is required")
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
+    acceptTerms: Yup.bool().oneOf([true], "Accept Terms & Conditions is required"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, formState } = useForm(formOptions);
-  const { errors, isSubmitting } = formState;
+  const { errors } = formState;
 
-  async function onSubmit(data) {
-    dispatch(alertActions.clear());
-    try {
-      await dispatch(userActions.register(data)).unwrap();
-
-      // redirect to login page and display success alert
-      navigate("/login");
-      dispatch(alertActions.success({ message: "Registration successful", showAfterRedirect: true }));
-    } catch (error) {
-      dispatch(alertActions.error(error));
-    }
-  }
+  const onSubmit = ({ firstName, lastName, email, password, confirmPassword, acceptTerms }) => {
+    dispatch(registerUser({ firstName, lastName, email, password, confirmPassword, acceptTerms }));
+    navigate("/verify-email-token");
+  };
 
   return (
     <section className="flex align-center justify-center">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 dark:bg-black dark:text-lightgray border-2">
         <div className="mb-8 text-center">
           <h1 className="my-3 text-4xl font-bold">Register</h1>
-          <p className="text-sm text-black dark:text-white">Sign up htmlFor a free account!</p>
+          <p className="text-sm text-black dark:text-white">Sign up for a free account!</p>
         </div>
         <form className="space-y-12 " onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
@@ -61,7 +55,7 @@ const navigate = useNavigate();
                     errors.firstName ? "is-invalid" : ""
                   } w-full px-3 py-2 border border-black text-lightgray placeholder:text-lightgray rounded-md dark:border-lightblack`}
                 />
-                <div className="invalid-feedback">{errors.firstName?.message}</div>
+                <div className="text-red-400">{errors.firstName?.message}</div>
               </div>
               <div>
                 <label htmlFor="lastName" className="block mb-2 text-sm">
@@ -89,13 +83,12 @@ const navigate = useNavigate();
                 type="email"
                 name="email"
                 id="email"
-                required
                 placeholder="info@editme.online"
                 className={`form-control ${
                   errors.firstName ? "is-invalid" : ""
                 } w-full px-3 py-2 border border-black text-lightgray placeholder:text-lightgray rounded-md dark:border-lightblack`}
               />
-              <div className="invalid-feedback">{errors.email?.message}</div>
+              <div className="text-red-400">{errors.email?.message}</div>
             </div>
             <div className="flex flex-row">
               <div>
@@ -109,32 +102,30 @@ const navigate = useNavigate();
                   type="password"
                   name="password"
                   id="password"
-                  required
                   placeholder="*****"
                   className={`form-control ${
                     errors.firstName ? "is-invalid" : ""
                   } w-full px-3 py-2 border border-black text-lightgray placeholder:text-lightgray rounded-md dark:border-lightblack`}
                 />
-                <div className="invalid-feedback">{errors.password?.message}</div>
+                <div className="text-red-400">{errors.password?.message}</div>
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <label htmlFor="repassword" className="text-sm">
+                  <label htmlFor="confirmPassword" className="text-sm">
                     Re-Password
                   </label>
                 </div>
                 <input
-                  {...register("repassword")}
+                  {...register("confirmPassword")}
                   type="password"
-                  name="repassword"
-                  id="repassword"
-                  required
+                  name="confirmPassword"
+                  id="confirmPassword"
                   placeholder="*****"
                   className={`form-control ${
                     errors.firstName ? "is-invalid" : ""
                   } w-full px-3 py-2 border border-black text-lightgray placeholder:text-lightgray rounded-md dark:border-lightblack`}
                 />
-                <div className="invalid-feedback">{errors.repassword?.message}</div>
+                <div className="text-red-400">{errors.confirmPassword?.message}</div>
               </div>
             </div>
             <div className="flex flex-row">
@@ -150,30 +141,48 @@ const navigate = useNavigate();
                 <span className="ml-2">Yes</span>
               </label>
             </div>
+            <div>
+              <div className="flex items-center">
+                <input
+                  {...register("acceptTerms")}
+                  name="acceptTerms"
+                  type="checkbox"
+                  className={`form-control ${
+                    errors.firstName ? "is-invalid" : ""
+                  } w-4 h-4 text-blue-600 bg-gray border-black rounded focus:ring-coral focus:ring-2 `}
+                />
+                <label htmlFor="acceptTerms" className="ml-2 text-sm font-medium ">
+                  I agree with the{" "}
+                  <Link to="/" className="hover:underline">
+                    terms and conditions
+                  </Link>
+                  .
+                </label>
+              </div>
+              <div className="text-red-400">{errors.acceptTerms?.message}</div>
+            </div>
           </div>
           <div className="space-y-2">
             <div>
-              <button
-                type="submit"
-                // disabled={isSubmitting}
-                className="w-full px-8 py-3 font-semibold rounded-md bg-coral dark:bg-coral"
-              >
-                {/* {isSubmitting && (
-                  <button type="button" className="bg-indigo-500 ..." disabled>
-                    <svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24"></svg>
-                    Submitting...
-                  </button>
-                )} */}
-                Sign in
+              <button type="submit" className="w-full py-3 font-semibold rounded-md bg-coral hover:text-white hover:shadow-lg dark:bg-coral">
+                Sign up
               </button>
             </div>
             <p className="px-6 text-sm text-center">
               Already Registered?{" "}
-              <Link to="/login" className="hover:underline font-bold text-coral dark:text-coral">
+              <Link to="/signin" className="hover:underline font-bold text-coral dark:text-coral">
                 {" "}
                 Sign in here
               </Link>
               .
+            </p>
+            <p className="px-6 text-xs text-center mt-5 font-extrabold">
+              You registered but forgot token?
+              <Link to="/resend-verify-token" className="hover:underline font-bold text-coral dark:text-coral">
+                {" "}
+                Resend Verify Token
+              </Link>
+              !
             </p>
           </div>
         </form>
