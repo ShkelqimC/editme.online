@@ -19,8 +19,8 @@ function Alert() {
   if (!alert) return null;
 
   return (
-    <div className="fixed top-10 left-2/4">
-      <div className="m-3">
+    <div className="absolute top-10 left-2/4">
+      <div className="m-3 relative">
         <div
           className={`bg-red-100 border ${
             alert.type === "success" ? " border-green-400 text-green-700" : "border-red-400 text-red-700"
