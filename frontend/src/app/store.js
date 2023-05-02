@@ -77,6 +77,7 @@ export const zustandstore = create((set, get) => ({
   selectedSideNavOption: "Adjust",
   selectedBottomOption: "Brightness",
   adjust: defaultAdjust,
+  changedValues: [{Brightness: 100}, {Contrast:100}, {Saturation: 100}, {Grayscale:0}, {Sepia:0}, {"Hue Rotate": 0}, {Blur: 0} ],
   hasChangedStyles: false,
 
 
@@ -112,5 +113,6 @@ export const useSideNavOption = () => zustandstore(state => state.selectedSideNa
 export const selectedBottomOption = () => zustandstore(state => state.selectedBottomOption)
 export const adjust = () => zustandstore(state => state.adjust)
 export const setSliderValue = () => zustandstore(state => state.setSliderValue)
+export const changedValues = () => zustandstore(state => state.changedValues)
 
 export const useActions = () => zustandstore(state => state.actions)

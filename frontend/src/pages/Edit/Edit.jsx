@@ -15,6 +15,7 @@ import {
   hasChangedStyles,
   adjust,
 } from "../../app/store";
+import CropSlider from "../../components/CropSlider";
 
 const sideNavbar = [
   {
@@ -65,6 +66,7 @@ export function Edit() {
     setSelectedSideNavOption,
     resetStyles,
     hasChangedStyles,
+    changedValues,
   ] = zustandstore((state) => [
     state.selectedBottomOption,
     state.setSelectedBottomOption,
@@ -73,6 +75,7 @@ export function Edit() {
     state.setSelectedSideNavOption,
     state.resetStyles,
     state.hasChangedStyles,
+    state.changedValues,
   ]);
 
   const actions = useActions();
@@ -93,13 +96,26 @@ export function Edit() {
   // ];
   let { state } = useLocation();
 
+  const [cropShape, setCropShape] = useState("rect");
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {},
   []);
 
-  function handleSliderChange({ target }) {
+  function handleCropChange({ target, rotation }) {
+    setRotation(target.value);
+  }
+  function handleSliderChange({ target }, name) {
+    var changed = { [name]: target.value };
+    changedValues.push(changed);
     setSliderValue(target.value);
+    console.log(changedValues, "changedValues");
+  }
+  function handleZoomChange({ target, zoom }) {
+    console.log(target, "target");
+    console.log(zoom, "zoom");
+    setZoom(target.value);
   }
 
   function getStyle() {
@@ -109,12 +125,11 @@ export function Edit() {
 
     return { filter: filters.join(" ") };
   }
-  function onZoomChange() {}
   return (
     <>
-      <section className="flex">
+      <section className="section flex">
         <aside
-          className="w-64 max-h-screen p-6 sm:w-60 bg-blue text-lightgray dark:bg-black dark:text-lightgray"
+          className="w-64 max-h-screen p-6 sm:w-60 bg-blue text-lightgray dark:bg-black dark:text-lightgray relative"
           // style={{ height: "calc(100vh - 330px)" }}
         >
           <nav className="space-y-8 text-sm">
@@ -302,10 +317,26 @@ export function Edit() {
           </nav>
         </aside>
 
-        <div className="imageContainer">
-          {selectedSideNavOption === "Crop" && (
+        {selectedSideNavOption === "Adjust" ? (
+          <div className="imageContainer">
+            <img
+              src={state.data.url}
+              className="editImage"
+              style={getStyle()}
+            />
+            {hasChangedStyles && (
+              <div>
+                <button className="resetFilterBtn" onClick={resetStyles}>
+                  Reset filters
+                </button>
+              </div>
+            )}
+          </div>
+        ) : selectedSideNavOption === "Crop" ? (
+          <div className="imageContainer">
             <Cropper
               image={state.data?.url}
+              rotation={rotation}
               style={{ mediaStyle: getStyle() }}
               crop={crop}
               zoom={zoom}
@@ -313,48 +344,60 @@ export function Edit() {
               onCropChange={setCrop}
               onCropComplete={onCropComplete}
               onZoomChange={setZoom}
-              // disableAutomaticStylesInjection={true}
+              cropShape={cropShape} // disableAutomaticStylesInjection={true}
               mediaProps={<img />}
             />
-          )}
-          {selectedSideNavOption === "Adjust" && (
-            <img
-              src={state.data.url}
-              className="editImage"
-              style={getStyle()}
+          </div>
+        ) : (
+          <></>
+        )}
+      </section>
+      <nav className="bottomNav p-4 bg-blue text-lightgray dark:bg-black dark:text-lightgray border-b-2 border-gray">
+        <div
+          className={`container ${""} flex justify-between h-20 mx-auto md:justify-center flex-col items-center w-88 relative`}
+        >
+          <ul className="items-stretch space-x-3 md:flex flex flex-col">
+            <div className="flex space-x-5">
+              {selectedSideNavOption === "Adjust" &&
+                Object.keys(bottomOption).map((item, index) => {
+                  return (
+                    <li
+                      className={`edit-item ${
+                        item === selectedBottomOption ? "active" : ""
+                      }`}
+                    >
+                      <b className="curve leftCurve"></b>
+                      <b className="curve rightCurve"></b>
+                      <BottomAdjustItem
+                        key={index}
+                        name={item}
+                        active={item === selectedBottomOption}
+                        handleClick={() => setSelectedBottomOption(item)}
+                      />
+                    </li>
+                  );
+                })}
+            </div>
+            {selectedSideNavOption === "Adjust" && (
+              <div className="flex justify-center ">
+                <Slider
+                  min={bottomOption[selectedBottomOption]?.range?.min}
+                  max={bottomOption[selectedBottomOption]?.range?.max}
+                  value={bottomOption[selectedBottomOption]?.value}
+                  name={selectedBottomOption}
+                  handleChange={handleSliderChange}
+                />
+              </div>
+            )}
+          </ul>
+          {selectedSideNavOption === "Crop" && (
+            <CropSlider
+              handleRotateChange={handleCropChange}
+              handleZoomChange={handleZoomChange}
+              rotateValue={rotation}
+              zoomValue={zoom}
             />
           )}
-        </div>
-      </section>
-      <nav className="p-4 bg-gray text-lightgray dark:bg-black dark:text-lightgray">
-        <div className="container flex justify-between h-16 mx-auto md:justify-center flex-col items-center w-88">
-          <ul className="items-stretch space-x-3 md:flex">
-            {selectedSideNavOption === "Adjust" &&
-              Object.keys(bottomOption).map((item, index) => {
-                return (
-                  <li
-                    className={`edit-item ${
-                      item === selectedBottomOption ? "active" : ""
-                    }`}
-                  >
-                    <BottomAdjustItem
-                      key={index}
-                      name={item}
-                      active={item === selectedBottomOption}
-                      handleClick={() => setSelectedBottomOption(item)}
-                    />
-                  </li>
-                );
-              })}
-          </ul>
-          <Slider
-            min={bottomOption[selectedBottomOption]?.range?.min}
-            max={bottomOption[selectedBottomOption]?.range?.max}
-            value={bottomOption[selectedBottomOption]?.value}
-            name={selectedBottomOption}
-            handleChange={handleSliderChange}
-          />
-          {hasChangedStyles && <button onClick={resetStyles}>reset</button>}
         </div>
       </nav>
     </>
