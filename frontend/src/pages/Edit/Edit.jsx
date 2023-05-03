@@ -67,6 +67,9 @@ export function Edit() {
     resetStyles,
     hasChangedStyles,
     changedValues,
+    imageData,
+    imageURL,
+    setImageURL,
   ] = zustandstore((state) => [
     state.selectedBottomOption,
     state.setSelectedBottomOption,
@@ -76,6 +79,10 @@ export function Edit() {
     state.resetStyles,
     state.hasChangedStyles,
     state.changedValues,
+    state.imageData,
+
+    state.imageURL,
+    state.setImageURL,
   ]);
 
   const actions = useActions();
@@ -100,21 +107,20 @@ export function Edit() {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {},
-  []);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
 
   function handleCropChange({ target, rotation }) {
     setRotation(target.value);
   }
   function handleSliderChange({ target }, name) {
-    var changed = { [name]: target.value };
-    changedValues.push(changed);
+    changedValues[selectedBottomOption] = target.value;
     setSliderValue(target.value);
-    console.log(changedValues, "changedValues");
   }
   function handleZoomChange({ target, zoom }) {
-    console.log(target, "target");
-    console.log(zoom, "zoom");
     setZoom(target.value);
   }
 
@@ -124,6 +130,101 @@ export function Edit() {
     );
 
     return { filter: filters.join(" ") };
+  }
+  const createImage = (url) =>
+    new Promise((resolve, reject) => {
+      const image = new Image();
+      image.addEventListener("load", () => resolve(image));
+      image.addEventListener("error", (error) => reject(error));
+      image.setAttribute("crossOrigin", "anonymous");
+      image.src = url;
+    });
+  function getRadianAngle(degreeValue) {
+    return (degreeValue * Math.PI) / 180;
+  }
+  function rotateSize(width, height, rotation) {
+    const rotRad = getRadianAngle(rotation);
+
+    return {
+      width:
+        Math.abs(Math.cos(rotRad) * width) +
+        Math.abs(Math.sin(rotRad) * height),
+      height:
+        Math.abs(Math.sin(rotRad) * width) +
+        Math.abs(Math.cos(rotRad) * height),
+    };
+  }
+
+  async function getCroppedImg(
+    imageSrc,
+    pixelCrop,
+    rotation = 0,
+    flip = { horizontal: false, vertical: false }
+  ) {
+    const image = await createImage(imageSrc);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return null;
+    }
+
+    const rotRad = getRadianAngle(rotation);
+
+    const { width: bBoxWidth, height: bBoxHeight } = rotateSize(
+      image.width,
+      image.height,
+      rotation
+    );
+
+    canvas.width = bBoxWidth;
+    canvas.height = bBoxHeight;
+
+    ctx.translate(bBoxWidth / 2, bBoxHeight / 2);
+    ctx.rotate(rotRad);
+    ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1);
+    ctx.translate(-image.width / 2, -image.height / 2);
+
+    ctx.drawImage(image, 0, 0);
+    const data = ctx.getImageData(
+      pixelCrop.x,
+      pixelCrop.y,
+      pixelCrop.width,
+      pixelCrop.height
+    );
+
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+
+    ctx.putImageData(data, 0, 0);
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((file) => {
+        resolve(URL.createObjectURL(file));
+      }, "image/jpeg");
+    });
+  }
+  const showCroppedImage = useCallback(async () => {
+    try {
+      const croppedImg = await getCroppedImg(
+        imageURL,
+        croppedAreaPixels,
+        rotation
+      );
+      console.log("test", { croppedImg });
+      setZoom(1);
+      setImageURL(croppedImg);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [croppedAreaPixels, rotation, imageURL]);
+
+  function download() {
+    var canvas = document.getElementById("canvas");
+    // var url = canvas.toDataURL("image/png");
+    var link = document.createElement("a");
+    link.download = "filename.png";
+    link.href = imageURL;
+    link.click();
   }
   return (
     <>
@@ -150,7 +251,7 @@ export function Edit() {
                       d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
                     />
                   </svg>
-                  <span>Save</span>
+                  <span onClick={download}>Save</span>
                 </div>
               </Link>
               <Link to="/">
@@ -315,15 +416,12 @@ export function Edit() {
               </table>
             </div>
           </nav>
+          <button onClick={download}>Export Image</button>
         </aside>
 
         {selectedSideNavOption === "Adjust" ? (
           <div className="imageContainer">
-            <img
-              src={state.data.url}
-              className="editImage"
-              style={getStyle()}
-            />
+            <img src={imageURL} className="editImage" style={getStyle()} />
             {hasChangedStyles && (
               <div>
                 <button className="resetFilterBtn" onClick={resetStyles}>
@@ -335,9 +433,15 @@ export function Edit() {
         ) : selectedSideNavOption === "Crop" ? (
           <div className="imageContainer">
             <Cropper
-              image={state.data?.url}
+              image={imageURL}
               rotation={rotation}
-              style={{ mediaStyle: getStyle() }}
+              style={{
+                mediaStyle: getStyle(),
+              }}
+              classes={{
+                containerClassName: "easyCropContainer",
+                mediaClassName: "editImage",
+              }}
               crop={crop}
               zoom={zoom}
               aspect={4 / 3}
@@ -391,12 +495,23 @@ export function Edit() {
             )}
           </ul>
           {selectedSideNavOption === "Crop" && (
-            <CropSlider
-              handleRotateChange={handleCropChange}
-              handleZoomChange={handleZoomChange}
-              rotateValue={rotation}
-              zoomValue={zoom}
-            />
+            <div className="cropOptionsContainer">
+              <CropSlider
+                handleRotateChange={handleCropChange}
+                handleZoomChange={handleZoomChange}
+                rotateValue={rotation}
+                zoomValue={zoom}
+              />
+
+              <div className="cropBtnsContainer flex flex-col justify-center items-center">
+                <button className="cropOptionBtn" onClick={showCroppedImage}>
+                  Crop
+                </button>
+                <button className="cropOptionBtn" onClick={showCroppedImage}>
+                  Shape
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </nav>

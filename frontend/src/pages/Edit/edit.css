@@ -19,6 +19,15 @@
   border-radius: 0px 2px 20px 20px;
   position: relative;
 }
+.cropOptionsContainer {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+}
+
 .edit-item:hover,
 .edit-item:focus {
 }
@@ -26,6 +35,22 @@
   background: #fff;
   /* border-bottom: 3px solid red; */
   color: #0f172a;
+}
+.cropOptionBtn {
+  border: 1px solid white;
+  height: 40px;
+  width: 100px;
+  color: white;
+  font-weight: 400;
+  border-radius: 6px;
+  left: 50%;
+  top: 95%;
+  transition: 0.1s all ease-in;
+}
+
+.cropOptionBtn:hover {
+  background-color: black;
+  color: white;
 }
 /* .edit-item::after {
   margin: 0;
@@ -64,6 +89,7 @@
   flex-direction: column;
   align-items: center;
 }
+
 .sidebarItem.active {
   color: green;
 }
@@ -73,6 +99,13 @@
   width: 100%;
   display: flex;
   justify-content: center;
+}
+.cropBtnsContainer {
+  margin-top: 10px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 .cropSliderContainer {
   margin-top: 10px;

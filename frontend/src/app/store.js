@@ -77,6 +77,12 @@ export const zustandstore = create((set, get) => ({
   selectedSideNavOption: "Adjust",
   selectedBottomOption: "Brightness",
   adjust: defaultAdjust,
+  imageURL: "",
+  imageData: {
+    url: "",
+    id: "",
+    img: File,
+  },
   changedValues: [{Brightness: 100}, {Contrast:100}, {Saturation: 100}, {Grayscale:0}, {Sepia:0}, {"Hue Rotate": 0}, {Blur: 0} ],
   hasChangedStyles: false,
 
@@ -105,6 +111,18 @@ export const zustandstore = create((set, get) => ({
           hasChangedStyles: true
         });
       },
+      setImageURL(url) {
+        set({imageURL: url})
+      },
+      setImageData(data){
+        set({
+          imageData:{
+          ...get().imageData,
+                    id : data.id,
+        url : data.url,
+         img: data.img
+        }, 
+      })}
   
 }));
 
@@ -114,5 +132,9 @@ export const selectedBottomOption = () => zustandstore(state => state.selectedBo
 export const adjust = () => zustandstore(state => state.adjust)
 export const setSliderValue = () => zustandstore(state => state.setSliderValue)
 export const changedValues = () => zustandstore(state => state.changedValues)
+export const imageData = () => zustandstore(state => state.imageData)
+export const setImageData = () => zustandstore(state => state.setImageData)
+export const imageURL = () => zustandstore(state => state.imageURL)
+export const setImageURL = () => zustandstore(state => state.setImageURL)
 
 export const useActions = () => zustandstore(state => state.actions)
