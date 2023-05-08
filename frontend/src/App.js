@@ -22,6 +22,7 @@ import UserGallery from "./pages/Dashboard/user/UserGallery";
 import SettingsDetails from "./pages/Dashboard/user/SettingsDetails";
 import VerifyEmailToken from "./pages/account/VerifyEmailToken";
 import ResendVerifyEmail from "./pages/account/ResendVerifyEmail";
+import ForgotPassword from "./pages/account/ForgotPassword";
 function App() {
   const auth = useSelector((x) => x.auth?.auth);
   // history.navigate = useNavigate();
@@ -42,6 +43,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/verify-email-token" element={<VerifyEmailToken />} />
             <Route path="/resend-verify-token" element={<ResendVerifyEmail />} />
+            <Route path="forgot-password" element={<ForgotPassword/>} />
             {auth && (
               <Route path="/dashboard" element={<Dashboard auth={auth} />}>
                 {auth?.role === "Admin" ? (

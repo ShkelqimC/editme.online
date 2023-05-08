@@ -4,6 +4,6 @@
     {
         public string GenerateJwtToken(Account user);
         public int? ValidateJwtToken(string token);
-        public Task<RefreshToken> GenerateRefreshToken(/*string ipAddress*/);
+        public Task<RefreshToken> GenerateRefreshToken(string ipAddress);
     }
 }

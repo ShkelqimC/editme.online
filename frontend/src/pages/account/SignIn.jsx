@@ -56,7 +56,7 @@ export default function SignIn() {
                 <label htmlFor="password" className="text-sm">
                   Password
                 </label>
-                <Link to="/forgotpassword" className="text-xs hover:underline hover:text-coral dark:text-gray-400">
+                <Link to="/forgot-password" className="text-xs hover:underline hover:text-coral dark:text-gray-400">
                   Forgot password?
                 </Link>
               </div>

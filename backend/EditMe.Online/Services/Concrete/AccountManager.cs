@@ -23,7 +23,7 @@ public class AccountManager : IAccountManager
     }
 
 
-    public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model/*, string ipAddress*/)
+    public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model, string ipAddress)
     {
         var account = _context.Accounts.SingleOrDefault(x => x.Email == model.Email);
 
@@ -34,7 +34,7 @@ public class AccountManager : IAccountManager
         }
         else if (!account.IsVerified)
         {
-            throw new AppException("Account isnt verified");
+            throw new AppException("Account isn't verified");
         }
         else if (!Verify(model.Password, account.PasswordHash))
         {
@@ -42,7 +42,7 @@ public class AccountManager : IAccountManager
         }
         // authentication successful so generate jwt and refresh tokens
         var jwtToken = _jwtManager.GenerateJwtToken(account);
-        var refreshToken = await _jwtManager.GenerateRefreshToken(/*ipAddress*/);
+        var refreshToken = await _jwtManager.GenerateRefreshToken(ipAddress);
         account.RefreshTokens.Add(refreshToken);
 
         // remove old refresh tokens from account
@@ -58,7 +58,7 @@ public class AccountManager : IAccountManager
         return response;
     }
 
-    public async Task<AuthenticateResponse> RefreshToken(string token/*, string ipAddress*/)
+    public async Task<AuthenticateResponse> RefreshToken(string token, string ipAddress)
     {
         var account = await GetAccountByRefreshToken(token);
         var refreshToken = account.RefreshTokens.Single(x => x.Token == token);
@@ -66,7 +66,7 @@ public class AccountManager : IAccountManager
         if (refreshToken.IsRevoked)
         {
             // revoke all descendant tokens in case this token has been compromised
-            RevokeDescendantRefreshTokens(refreshToken, account/*, ipAddress*/, $"Attempted reuse of revoked ancestor token: {token}");
+            RevokeDescendantRefreshTokens(refreshToken, account, ipAddress, $"Attempted reuse of revoked ancestor token: {token}");
             _context.Update(account);
             await _context.SaveChangesAsync();
         }
@@ -75,13 +75,11 @@ public class AccountManager : IAccountManager
             throw new AppException("Invalid token");
 
         // replace old refresh token with a new one (rotate token)
-        var newRefreshToken = await RotateRefreshToken(refreshToken/*, ipAddress*/);
+        var newRefreshToken = await RotateRefreshToken(refreshToken, ipAddress);
         account.RefreshTokens.Add(newRefreshToken);
 
-        // remove old refresh tokens from account
         RemoveOldRefreshTokens(account);
 
-        // save changes to db
         _context.Update(account);
         await _context.SaveChangesAsync();
 
@@ -95,7 +93,7 @@ public class AccountManager : IAccountManager
         return response;
     }
 
-    public async Task RevokeToken(string token/*, string ipAddress*/)
+    public async Task RevokeToken(string token, string ipAddress)
     {
         var account = await GetAccountByRefreshToken(token);
         var refreshToken = account.RefreshTokens.Single(x => x.Token == token);
@@ -104,18 +102,18 @@ public class AccountManager : IAccountManager
             throw new AppException("Invalid token");
 
         // revoke token and save
-        RevokeRefreshToken(refreshToken,/* ipAddress,*/ "Revoked without replacement");
+        RevokeRefreshToken(refreshToken, ipAddress, "Revoked without replacement");
         _context.Update(account);
         await _context.SaveChangesAsync();
     }
 
-    public async Task Register(RegisterRequest model/*, string origin*/)
+    public async Task Register(RegisterRequest model, string origin)
     {
         // validate
         if (await _context.Accounts.AnyAsync(x => x.Email == model.Email))
         {
             // send already registered error in email to prevent account enumeration
-            await SendAlreadyRegisteredEmail(model.Email/*, origin*/);
+            await SendAlreadyRegisteredEmail(model.Email, origin);
             return;
         }
 
@@ -136,12 +134,12 @@ public class AccountManager : IAccountManager
         await _context.SaveChangesAsync();
 
         // send email
-        await SendVerificationEmail(account/*, origin*/);
+        await SendVerificationEmail(account, origin);
     }
 
     public async Task VerifyEmail(string token)
     {
-        var account =await _context.Accounts.SingleOrDefaultAsync(x => x.VerificationToken == token);
+        var account = await _context.Accounts.SingleOrDefaultAsync(x => x.VerificationToken == token);
         if (account == null) throw new AppException("Verification failed");
         account.Verified = DateTime.UtcNow;
         account.IsVerified = true;
@@ -150,7 +148,7 @@ public class AccountManager : IAccountManager
         _context.Accounts.Update(account);
         await _context.SaveChangesAsync();
     }
-    public async Task ResendVerifyEmail(ForgotPasswordRequest model/*, string origin*/)
+    public async Task ResendVerifyEmail(ForgotPasswordRequest model, string origin)
     {
         var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Email == model.Email);
 
@@ -161,9 +159,9 @@ public class AccountManager : IAccountManager
         //account.VerificationToken;
 
         // send email
-        await ReSendVerificationEmail(account/*, origin*/);
+        await ReSendVerificationEmail(account, origin);
     }
-    public async Task ForgotPassword(ForgotPasswordRequest model/*, string origin*/)
+    public async Task ForgotPassword(ForgotPasswordRequest model, string origin)
     {
         var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Email == model.Email);
 
@@ -178,7 +176,7 @@ public class AccountManager : IAccountManager
         await _context.SaveChangesAsync();
 
         // send email
-        await SendPasswordResetEmail(account/*, origin*/);
+        await SendPasswordResetEmail(account, origin);
     }
 
     public async Task ValidateResetToken(ValidateResetTokenRequest model)
@@ -309,10 +307,10 @@ public class AccountManager : IAccountManager
         return token;
     }
 
-    private async Task<RefreshToken> RotateRefreshToken(RefreshToken refreshToken/*, string ipAddress*/)
+    private async Task<RefreshToken> RotateRefreshToken(RefreshToken refreshToken, string ipAddress)
     {
-        var newRefreshToken = await _jwtManager.GenerateRefreshToken(/*ipAddress*/);
-        RevokeRefreshToken(refreshToken/*, ipAddress*/, "Replaced by new token", newRefreshToken.Token);
+        var newRefreshToken = await _jwtManager.GenerateRefreshToken(ipAddress);
+        RevokeRefreshToken(refreshToken, ipAddress, "Replaced by new token", newRefreshToken.Token);
         return newRefreshToken;
     }
 
@@ -323,16 +321,16 @@ public class AccountManager : IAccountManager
             x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
     }
 
-    private void RevokeDescendantRefreshTokens(RefreshToken refreshToken, Account account/*, string ipAddress*/, string reason)
+    private void RevokeDescendantRefreshTokens(RefreshToken refreshToken, Account account, string ipAddress, string reason)
     {
         // recursively traverse the refresh token chain and ensure all descendants are revoked
         if (!string.IsNullOrEmpty(refreshToken.ReplacedByToken))
         {
             var childToken = account.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken.ReplacedByToken);
             if (childToken.IsActive)
-                RevokeRefreshToken(childToken/*, ipAddress*/, reason);
+                RevokeRefreshToken(childToken, ipAddress, reason);
             else
-                RevokeDescendantRefreshTokens(childToken, account/*, ipAddress*/, reason);
+                RevokeDescendantRefreshTokens(childToken, account, ipAddress, reason);
         }
     }
 
@@ -344,41 +342,38 @@ public class AccountManager : IAccountManager
         token.ReplacedByToken = replacedByToken;
     }
 
-    private async Task SendVerificationEmail(Account account/*, string origin*/)
+    private async Task SendVerificationEmail(Account account, string origin)
     {
         string message;
-        //if (!string.IsNullOrEmpty(origin))
-        //{
-        //    // origin exists if request sent from browser single page app (e.g. Angular or React)
-        //    // so send link to verify via single page app
-        //    var verifyUrl = $"{origin}/account/verify-email?token={account.VerificationToken}";
-        //    message = $@"<p>Please click the below link to verify your email address:</p>
-        //                    <p><a href=""{verifyUrl}"">{verifyUrl}</a></p>";
-        //}
-        //else
-        //{
-        // origin missing if request sent directly to api (e.g. from Postman)
-        // so send instructions to verify directly with api
-        message = $@"<p>Please use the below token to verify your email address with the <code>/accounts/verify-email</code> api route:</p>
+        if (!string.IsNullOrEmpty(origin))
+        {
+            // origin exists if request sent from browser single page app (e.g. Angular or React) so send link to verify via single page app
+            var verifyUrl = $"{origin}/account/verify-email?token={account.VerificationToken}";
+            message = $@"<p>Please click the below link to verify your email address:</p>
+                            <p><a href=""{verifyUrl}"">{verifyUrl}</a></p>";
+        }
+        else
+        {
+            //   origin missing if request sent directly to api(e.g.from Postman) so send instructions to verify directly with api
+            message = $@"<p>Please use the below token to verify your email address with the <code>/accounts/verify-email</code> api route:</p>
                             <p><code>{account.VerificationToken}</code></p>";
-        //}
-
+        }
         await _emailManager.Send(
-             to: account.Email,
-             subject: "Sign-up Verification API - Verify Email",
-             html: $@"<h4>Verify Email</h4>
+                 to: account.Email,
+                 subject: "Sign-up Verification API - Verify Email",
+                 html: $@"<h4>Verify Email</h4>
                         <p>Thanks for registering!</p>
                         {message}"
-         );
+             );
     }
 
-    private async Task SendAlreadyRegisteredEmail(string email/*, string origin*/)
+    private async Task SendAlreadyRegisteredEmail(string email, string origin)
     {
         string message;
-        //if (!string.IsNullOrEmpty(/*origin*/))
-        //    message = $@"<p>If you don't know your password please visit the <a href=""{/*origin*/}/account/forgot-password"">forgot password</a> page.</p>";
-        //else
-        message = "<p>If you don't know your password you can reset it via the <code>/accounts/forgot-password</code> api route.</p>";
+        if (!string.IsNullOrEmpty(origin))
+            message = $@"<p>If you don't know your password please visit the <a href=""{origin}/account/forgot-password"">forgot password</a> page.</p>";
+        else
+            message = "<p>If you don't know your password you can reset it via the <code>/accounts/forgot-password</code> api route.</p>";
 
         await _emailManager.Send(
              to: email,
@@ -389,20 +384,20 @@ public class AccountManager : IAccountManager
          );
     }
 
-    private async Task SendPasswordResetEmail(Account account/*, string origin*/)
+    private async Task SendPasswordResetEmail(Account account, string origin)
     {
         string message;
-        //if (!string.IsNullOrEmpty(/*origin*/))
-        //{
-        //    var resetUrl = $"{/*origin*/}/account/reset-password?token={account.ResetToken}";
-        //    message = $@"<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
-        //                    <p><a href=""{resetUrl}"">{resetUrl}</a></p>";
-        //}
-        //else
-        //{
-        message = $@"<p>Please use the below token to reset your password with the <code>/accounts/reset-password</code> api route:</p>
+        if (!string.IsNullOrEmpty(origin))
+        {
+            var resetUrl = $"{origin}/account/reset-password?token={account.ResetToken}";
+            message = $@"<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
+                            <p><a href=""{resetUrl}"">{resetUrl}</a></p>";
+        }
+        else
+        {
+            message = $@"<p>Please use the below token to reset your password with the <code>/accounts/reset-password</code> api route:</p>
                             <p><code>{account.ResetToken}</code></p>";
-        //}
+        }
 
         await _emailManager.Send(
              to: account.Email,
@@ -412,24 +407,24 @@ public class AccountManager : IAccountManager
          );
     }
 
-    private async Task ReSendVerificationEmail(Account account/*, string origin*/)
+    private async Task ReSendVerificationEmail(Account account, string origin)
     {
         string message;
-        //if (!string.IsNullOrEmpty(origin))
-        //{
-        //    // origin exists if request sent from browser single page app (e.g. Angular or React)
-        //    // so send link to verify via single page app
-        //    var verifyUrl = $"{origin}/account/verify-email?token={account.VerificationToken}";
-        //    message = $@"<p>Please click the below link to verify your email address:</p>
-        //                    <p><a href=""{verifyUrl}"">{verifyUrl}</a></p>";
-        //}
-        //else
-        //{
-        // origin missing if request sent directly to api (e.g. from Postman)
-        // so send instructions to verify directly with api
-        message = $@"<p>Please use the below token to verify your email address with the <code>/accounts/verify-email</code> api route:</p>
+        if (!string.IsNullOrEmpty(origin))
+        {
+            // origin exists if request sent from browser single page app (e.g. Angular or React)
+            // so send link to verify via single page app
+            var verifyUrl = $"{origin}/account/verify-email?token={account.VerificationToken}";
+            message = $@"<p>Please click the below link to verify your email address:</p>
+                            <p><a href=""{verifyUrl}"">{verifyUrl}</a></p>";
+        }
+        else
+        {
+            //   origin missing if request sent directly to api(e.g.from Postman)
+            //so send instructions to verify directly with api
+            message = $@"<p>Please use the below token to verify your email address with the <code>/accounts/verify-email</code> api route:</p>
                             <p><code>{account.VerificationToken}</code></p>";
-        //}
+        }
         await _emailManager.Send(
              to: account.Email,
              subject: "Sign-up Verification API - Verify Email",
