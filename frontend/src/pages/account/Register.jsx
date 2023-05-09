@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +10,8 @@ import { registerUser } from "../../_store";
 export default function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
   // form validation rules
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().uppercase(),
@@ -99,7 +102,7 @@ export default function Register() {
                 </div>
                 <input
                   {...register("password")}
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   id="password"
                   placeholder="*****"
@@ -117,7 +120,7 @@ export default function Register() {
                 </div>
                 <input
                   {...register("confirmPassword")}
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="confirmPassword"
                   id="confirmPassword"
                   placeholder="*****"
@@ -130,13 +133,19 @@ export default function Register() {
             </div>
             <div className="flex flex-row">
               {" "}
-              <span className="block text-sm">Generate Password ?</span>
+              <span className="block text-sm">Show Password ?</span>
               <label htmlFor="checkbox" className="mx-5 inline-flex items-center text-sm cursor-pointer">
                 <span className="mx-2">No</span>
                 <span className="relative">
                   <input id="checkbox" type="checkbox" className="hidden peer" />
-                  <div className="w-10 h-4 rounded-full shadow peer-checked:bg-coral peer-checked:dark:bg-coral bg-lightblack"></div>
-                  <div className="absolute left-0 w-6 h-6 rounded-full shadow -inset-y-1 peer-checked:right-0 peer-checked:left-auto dark:bg-coral bg-coral"></div>
+                  <div
+                    className="w-10 h-4 rounded-full shadow peer-checked:bg-coral peer-checked:dark:bg-coral bg-lightblack"
+                    onClick={() => setShowPassword(!showPassword)}
+                  ></div>
+                  <div
+                    className="absolute left-0 w-6 h-6 rounded-full shadow -inset-y-1 peer-checked:right-0 peer-checked:left-auto dark:bg-coral bg-coral"
+                    onClick={() => setShowPassword(!showPassword)}
+                  ></div>
                 </span>
                 <span className="ml-2">Yes</span>
               </label>
@@ -148,7 +157,7 @@ export default function Register() {
                   name="acceptTerms"
                   type="checkbox"
                   className={`form-control ${
-                    errors.firstName ? "is-invalid" : ""
+                    errors.acceptTerms ? "is-invalid" : ""
                   } w-4 h-4 text-blue-600 bg-gray border-black rounded focus:ring-coral focus:ring-2 `}
                 />
                 <label htmlFor="acceptTerms" className="ml-2 text-sm font-medium ">
@@ -164,7 +173,10 @@ export default function Register() {
           </div>
           <div className="space-y-2">
             <div>
-              <button type="submit" className="w-full py-3 font-semibold rounded-md bg-coral hover:text-white hover:shadow-lg dark:bg-coral">
+              <button
+                type="submit"
+                className="w-full py-3 font-semibold rounded-md bg-coral hover:text-white hover:shadow-lg dark:bg-coral"
+              >
                 Sign up
               </button>
             </div>
