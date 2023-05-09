@@ -23,16 +23,17 @@ import SettingsDetails from "./pages/Dashboard/user/SettingsDetails";
 import VerifyEmailToken from "./pages/account/VerifyEmailToken";
 import ResendVerifyEmail from "./pages/account/ResendVerifyEmail";
 import ForgotPassword from "./pages/account/ForgotPassword";
+
 function App() {
   const auth = useSelector((x) => x.auth?.auth);
-  // history.navigate = useNavigate();
-  // history.location = useLocation();
+  history.navigate = useNavigate();
+  history.location = useLocation();
   return (
     <div
       id="app"
       className="dark:bg-black dark:text-lightgray transition-all font-roboto selection:bg-coral selection:text-white relative"
     >
-      <BrowserRouter>
+     
         <div id="content-wrapper">
           <Navbar />
           <Alert />
@@ -73,7 +74,6 @@ function App() {
           <FromBottomToTop />
           <Footer />
         </div>
-      </BrowserRouter>
     </div>
   );
 }

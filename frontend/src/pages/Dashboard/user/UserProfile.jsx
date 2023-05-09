@@ -5,7 +5,8 @@ import * as Yup from "yup";
 import { useDispatch,useSelector } from "react-redux";
 
 // TODO: edit user action store
-import { userActions, alertActions } from "../../../_store";
+import { userActions } from "../../../_store";
+import ToastMessage  from "../../../components/Alert";
 const UserInfo = () => {
   const auth = useSelector((x) => x.auth?.auth);
 
@@ -26,15 +27,14 @@ const UserInfo = () => {
       const { errors, isSubmitting } = formState;
     
       async function onSubmit(data) {
-        dispatch(alertActions.clear());
         try {
           await dispatch(userActions.register(data)).unwrap();
     
           // redirect to login page and display success alert
           navigate("/login");
-          dispatch(alertActions.success({ message: "Registration successful", showAfterRedirect: true }));
+          dispatch(ToastMessage("success","Registration successful", ));
         } catch (error) {
-          dispatch(alertActions.error(error));
+          dispatch(ToastMessage("error",error));
         }
       }
 

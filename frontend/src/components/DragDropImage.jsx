@@ -23,7 +23,7 @@ export function DragDropImage() {
         },
       });
     }
-  }, imageUrl);
+  }, [imageData, imageUrl, navigate]);
 
   const handleUpload = (event) => {
     const uploadedImage = event.target.files[0];
@@ -39,7 +39,20 @@ export function DragDropImage() {
         img: uploadedImage,
       };
     });
-  };
+    // setImageURL(imgUrl);
+    setImage(uploadedImage);
+    setImageUrl(imgUrl);
+    // setImageData((prevImageData) => {
+    //   return {
+    //     ...prevImageData,
+    //     id: uuidv4(),
+    //     url: imgUrl,
+    //     img: uploadedImage,
+    //   };
+    // });
+  }
+  console.log(imageData, "imageData");
+  // console.log(imageURL, "imageURL");
 
   const handleDrop = (event) => {
     event.preventDefault();

@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { fetchWrapper, getToken, removeToken, setToken } from "../_helpers";
-import history from "../_helpers/history";
+import { history } from "../_helpers";
+import ToastMessage from "../components/Alert";
 // create slice
 const baseUrl = `${process.env.REACT_APP_API_URL_HTTPS}/api/account`;
 
@@ -9,26 +10,26 @@ const user = JSON.parse(getToken()) || null;
 const initialState = {
   loading: false,
   auth: user,
+  error: null,
 };
 //authenticate user with email and password
 export const login = createAsyncThunk("auth/login", async (payload) => {
-  debugger
-  const response = await fetchWrapper.post(`${baseUrl}/authenticate`, payload);
-  setToken(response);
-  return response;
+  return await fetchWrapper.post(`${baseUrl}/authenticate`, payload);
 });
 
-//refresh token if user is logged in and token is valid and not expired 
-//TODO: this logic should be in middleware 
+//refresh token if user is logged in and token is valid and not expired
+//TODO: this logic should be in middleware
 //at the moment this logic is using with localstorage
 export const refreshToken = createAsyncThunk("auth/refresh-token", async () => {
-  const response = await fetchWrapper.post(`${baseUrl}/refresh-token`);
+  var token = user?.jwtToken;
+  //Check first access token class in .net core// shortcuts of isrevoked and isexpired might not work due shortcut defination
+  const response = await fetchWrapper.post(`${baseUrl}/refresh-token`, { token: token });
   setToken(response);
   return response;
 });
 
 //forgot password send email
-export const forgotPassword= createAsyncThunk("auth/forgot-password", async (payload) => {
+export const forgotPassword = createAsyncThunk("auth/forgot-password", async (payload) => {
   const response = await fetchWrapper.post(`${baseUrl}/forgot-password`, payload);
   return response;
 });
@@ -41,15 +42,20 @@ export const resetPassword = createAsyncThunk("auth/reset-password", async (payl
 
 //revoking token
 export const logout = createAsyncThunk("auth/signOut", async () => {
-  debugger
-  // var token = JSON.parse(getToken())?.jwtToken;
-  // await fetchWrapper.post(`${baseUrl}/revoke-token`, { token });
-  removeToken();
+  //   debugger
+  //  var token= user?.jwtToken;
+  // if(!token) console.log("token not found");
+  // var result=await fetchWrapper.post(`${baseUrl}/revoke-token`, {token:token});
+  // if(result?.isSuccess)
+  // console.log("token revoked")
+  // else
+  // console.log("token not revoked",result)
+  // removeToken();
 });
 
 //register user with email and password
 export const registerUser = createAsyncThunk("auth/register", async (payload) => {
-  debugger
+  debugger;
   const response = await fetchWrapper.post(`${baseUrl}/register`, payload);
   setToken(response);
   return response;
@@ -79,16 +85,26 @@ export const authSlice = createSlice({
     [logout.fulfilled]: (state, action) => {
       state.loading = false;
       state.auth = {};
-      // state.auth?.jwtToken = null;
+      removeToken();
+      const { from } = history.location.state || { from: { pathname: "/" } };
+      history.navigate(from);
     },
     [login.pending]: (state, action) => {
       state.loading = true;
     },
     [login.fulfilled]: (state, action) => {
+      setInterval(() => {
+        refreshToken();
+      }, 1000 * 60 * 7);
+      setToken(action.payload);
       state.auth = action.payload;
       state.loading = false;
+      ToastMessage("success", "Login Successfully");
+      const { from } = history.location.state || { from: { pathname: "/" } };
+      history.navigate(from);
     },
     [login.rejected]: (state, action) => {
+      state.error = action.error;
       state.loading = false;
     },
     [forgotPassword.pending]: (state, action) => {
@@ -100,6 +116,31 @@ export const authSlice = createSlice({
     },
     [forgotPassword.rejected]: (state, action) => {
       state.loading = false;
+    },
+    [registerUser.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [registerUser.fulfilled]: (state, action) => {
+      // state.auth = action.payload;
+      // localStorage.setItem("registeredUser", JSON.stringify(action.payload));
+      state.loading = false;
+    },
+    [registerUser.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.error;
+      ToastMessage("error", "User Not Registered");
+    },
+    [verifyEmail.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [verifyEmail.fulfilled]: (state, action) => {
+      state.auth = action.payload;
+      ToastMessage("success", "User Registered");
+      state.loading = false;
+    },
+    [verifyEmail.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.error;
     },
   },
 });

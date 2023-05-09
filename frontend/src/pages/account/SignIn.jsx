@@ -2,14 +2,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../_store";
+import { useEffect } from "react";
+import { history } from "../../_helpers";
+import ToastMessage from "../../components/Alert";
 
 export default function SignIn() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const authUser = useSelector((x) => x.auth?.auth);
+  const authError = useSelector((x) => x.auth?.error);
   // form validation rules
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required"),
@@ -19,14 +22,17 @@ export default function SignIn() {
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, formState } = useForm(formOptions);
-  const { errors } = formState;
+  const { errors, isSubmitting } = formState;
 
-  // const onError = (errors, e) => console.log(errors, e);
   const onSubmit = ({ email, password }) => {
-    debugger
     dispatch(login({ email, password }));
-    navigate("/dashboard");
   };
+  useEffect(() => {
+    if (authUser) {
+      const { from } = history.location.state || { from: { pathname: "/dashboard" } };
+      history.navigate(from);
+    }
+  }, [authUser, navigate]);
 
   return (
     <section className="flex align-center justify-center">
@@ -74,11 +80,14 @@ export default function SignIn() {
           <div className="space-y-2">
             <div>
               <button
+                disabled={isSubmitting}
                 type="submit"
                 className="w-full py-3 font-semibold rounded-md bg-coral hover:text-white hover:shadow-lg dark:bg-coral"
               >
+                {isSubmitting && <span className="shadow-sky-200 border-spacing-1">loading...</span>}
                 Sign in
               </button>
+              {authError && ToastMessage("error", authError?.message)}
             </div>
             <p className="px-6 text-sm text-center">
               Don't have an account yet?

@@ -19,7 +19,6 @@ const GetInTouch = () => {
     this.props.onSubmit(recaptchaValue);
     e.preventDefault();
     emailjs
-      // .sendForm("service_23z3i3t", "template_pg2m42m", form.current,"AMTiSuUZ5ifz8P9Dv")
       .sendForm(
         `${process.env.REACT_APP_EMAILJS_SERVICEID}`,
         `${process.env.REACT_APP_EMAILJS_TEMPLATE_ID}`,
@@ -241,7 +240,7 @@ const GetInTouch = () => {
           </div>
           {/* <div className="g-recaptcha" data-sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} data-callback="onReSubmit"></div> */}
           <ReCAPTCHA
-            sitekey={`6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI`}
+            sitekey={`${process.env.REACT_APP_RECAPTCHA_SITE_KEY}`}
             onChange={onReSubmit}
             theme={localStorage.getItem("EditMe-current-theme")}
             size="normal"
