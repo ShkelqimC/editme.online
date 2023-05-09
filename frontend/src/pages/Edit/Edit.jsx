@@ -1,57 +1,237 @@
 import { useLocation, Link } from "react-router-dom";
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import SideNavbarItem from "../../components/SideNavbarItem";
+import AdjustItem from "../../components/AdjustItem";
+import "./edit.css";
+import { Slider } from "../../components/Slider";
+import BottomAdjustItem from "../../components/BottomAdjustItem";
+import Cropper from "react-easy-crop";
 
-export function Edit(props, { imgUrl }) {
+import {
+  zustandstore,
+  selectedBottomOption,
+  selectedSideNavOption,
+  useActions,
+  hasChangedStyles,
+  adjust,
+} from "../../app/store";
+import CropSlider from "../../components/CropSlider";
+
+const sideNavbar = [
+  {
+    name: "Adjust",
+    path: "#adjust",
+    icon: "",
+  },
+  {
+    name: "Crop",
+    path: "",
+    icon: "",
+  },
+  {
+    name: "Resolation",
+    path: "#resolation",
+    icon: "",
+  },
+  {
+    name: "Text",
+    path: "#text",
+    icon: "",
+  },
+  {
+    name: "Shape",
+    path: "#shape",
+    icon: "",
+  },
+  {
+    name: "Collage",
+    path: "#collage",
+    icon: "",
+  },
+  {
+    name: "Convert",
+    path: "#convert",
+    icon: "",
+  },
+];
+
+export function Edit() {
+  const bottomOption = zustandstore((state) => state.adjust);
+
+  const [
+    selectedBottomOption,
+    setSelectedBottomOption,
+    setSliderValue,
+    selectedSideNavOption,
+    setSelectedSideNavOption,
+    resetStyles,
+    hasChangedStyles,
+    changedValues,
+    imageData,
+    imageURL,
+    setImageURL,
+  ] = zustandstore((state) => [
+    state.selectedBottomOption,
+    state.setSelectedBottomOption,
+    state.setSliderValue,
+    state.selectedSideNavOption,
+    state.setSelectedSideNavOption,
+    state.resetStyles,
+    state.hasChangedStyles,
+    state.changedValues,
+    state.imageData,
+
+    state.imageURL,
+    state.setImageURL,
+  ]);
+
+  const actions = useActions();
+
+  // const [
+  //   setSelectedBottomOption,
+  //   setSliderValue,
+  //   selectedSideNavOption,
+  //   resetStyles,
+  //   hasChangedStyles,
+  //   setSelectedSideNavOption,
+  // ] = [
+  //   selectedBottomOption(),
+  //   actions.setSliderValue(),
+  //   actions.setSelectedSideNavOption(),
+  //   actions.resetStyles(),
+  //   actions.setSelectedSideNavOption(),
+  // ];
   let { state } = useLocation();
 
-  // debugger;
-  console.log(state, "state");
-  console.log(props, "props");
-  console.log(state?.data?.url, "state.data.url");
+  const [cropShape, setCropShape] = useState("rect");
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
-  const sideNavbar = [
-    {
-      name: "Resolation",
-      path: "#resolation",
-      icon: "",
-    },
-    {
-      name: "Adjust",
-      path: "#adjust",
-      icon: "",
-    },
-    {
-      name: "Text",
-      path: "#text",
-      icon: "",
-    },
-    {
-      name: "Adjust",
-      path: "#adjust",
-      icon: "",
-    },
-    {
-      name: "Shape",
-      path: "#shape",
-      icon: "",
-    },
-    {
-      name: "Collage",
-      path: "#collage",
-      icon: "",
-    },
-    {
-      name: "Convert",
-      path: "#convert",
-      icon: "",
-    },
-  ];
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  function handleCropChange({ target, rotation }) {
+    setRotation(target.value);
+  }
+  function handleSliderChange({ target }, name) {
+    changedValues[selectedBottomOption] = target.value;
+    setSliderValue(target.value);
+  }
+  function handleZoomChange({ target, zoom }) {
+    setZoom(target.value);
+  }
+
+  function getStyle() {
+    var filters = Object.values(bottomOption).map(
+      (value, index) => `${value.property}(${value.value}${value.unit})`
+    );
+
+    return { filter: filters.join(" ") };
+  }
+  const createImage = (url) =>
+    new Promise((resolve, reject) => {
+      const image = new Image();
+      image.addEventListener("load", () => resolve(image));
+      image.addEventListener("error", (error) => reject(error));
+      image.setAttribute("crossOrigin", "anonymous");
+      image.src = url;
+    });
+  function getRadianAngle(degreeValue) {
+    return (degreeValue * Math.PI) / 180;
+  }
+  function rotateSize(width, height, rotation) {
+    const rotRad = getRadianAngle(rotation);
+
+    return {
+      width:
+        Math.abs(Math.cos(rotRad) * width) +
+        Math.abs(Math.sin(rotRad) * height),
+      height:
+        Math.abs(Math.sin(rotRad) * width) +
+        Math.abs(Math.cos(rotRad) * height),
+    };
+  }
+
+  async function getCroppedImg(
+    imageSrc,
+    pixelCrop,
+    rotation = 0,
+    flip = { horizontal: false, vertical: false }
+  ) {
+    const image = await createImage(imageSrc);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return null;
+    }
+
+    const rotRad = getRadianAngle(rotation);
+
+    const { width: bBoxWidth, height: bBoxHeight } = rotateSize(
+      image.width,
+      image.height,
+      rotation
+    );
+
+    canvas.width = bBoxWidth;
+    canvas.height = bBoxHeight;
+
+    ctx.translate(bBoxWidth / 2, bBoxHeight / 2);
+    ctx.rotate(rotRad);
+    ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1);
+    ctx.translate(-image.width / 2, -image.height / 2);
+
+    ctx.drawImage(image, 0, 0);
+    const data = ctx.getImageData(
+      pixelCrop.x,
+      pixelCrop.y,
+      pixelCrop.width,
+      pixelCrop.height
+    );
+
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+
+    ctx.putImageData(data, 0, 0);
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((file) => {
+        resolve(URL.createObjectURL(file));
+      }, "image/jpeg");
+    });
+  }
+  const showCroppedImage = useCallback(async () => {
+    try {
+      const croppedImg = await getCroppedImg(
+        imageURL,
+        croppedAreaPixels,
+        rotation
+      );
+      console.log("test", { croppedImg });
+      setZoom(1);
+      setImageURL(croppedImg);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [croppedAreaPixels, rotation, imageURL]);
+
+  function download() {
+    var canvas = document.getElementById("canvas");
+    // var url = canvas.toDataURL("image/png");
+    var link = document.createElement("a");
+    link.download = "filename.png";
+    link.href = imageURL;
+    link.click();
+  }
   return (
     <>
-      <section className="flex">
+      <section className="section flex">
         <aside
-          className="w-64 max-h-screen p-6 sm:w-60 bg-gray text-lightgray dark:bg-black dark:text-lightgray"
-          style={{ height: "calc(100vh - 330px)" }}
+          className="w-64 max-h-screen p-6 sm:w-60 bg-blue text-lightgray dark:bg-black dark:text-lightgray relative"
+          // style={{ height: "calc(100vh - 330px)" }}
         >
           <nav className="space-y-8 text-sm">
             <div className="flex flex-row justify-evenly ">
@@ -71,7 +251,7 @@ export function Edit(props, { imgUrl }) {
                       d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
                     />
                   </svg>
-                  <span>Save</span>
+                  <span onClick={download}>Save</span>
                 </div>
               </Link>
               <Link to="/">
@@ -84,7 +264,11 @@ export function Edit(props, { imgUrl }) {
                     stroke="currentColor"
                     class="w-6 h-6"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                    />
                   </svg>
                   <span>Undo</span>
                 </div>
@@ -99,7 +283,11 @@ export function Edit(props, { imgUrl }) {
                     stroke="currentColor"
                     class="w-6 h-6"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3"
+                    />
                   </svg>
                   <span>Redo</span>
                 </div>
@@ -124,18 +312,20 @@ export function Edit(props, { imgUrl }) {
                 </div>
               </Link>
             </div>
+
             <div className="space-y-2 ">
               <div className="flex flex-col space-y-5 px-10 text-start">
-                {sideNavbar.map((item, index) => (
-                  <Link
-                    to={item.path}
-                    className={({ isActive }) => (isActive ? "edit-active-state " : "edit-inactive-state")}
-                    key={index}
-                  >
-                    {item.icon}
-                    {item.name}
-                  </Link>
-                ))}
+                {sideNavbar.map((item, index) => {
+                  return (
+                    <SideNavbarItem
+                      item={item}
+                      index={index}
+                      onClick={() => setSelectedSideNavOption(item.name)}
+                      active={selectedSideNavOption === item.name}
+                      options={item.default_values}
+                    />
+                  );
+                })}
               </div>
             </div>
 
@@ -226,35 +416,103 @@ export function Edit(props, { imgUrl }) {
               </table>
             </div>
           </nav>
+          <button onClick={download}>Export Image</button>
         </aside>
-        <div className="flex items-center text-center justify-center mx-auto text-lightblack dark:bg-lightgray w-screen min-h-fit">
-          {state?.data?.url && <img src={state.data.url} className="image" />}
-          <h1>Testing</h1>
-        </div>
+
+        {selectedSideNavOption === "Adjust" ? (
+          <div className="imageContainer">
+            <img src={imageURL} className="editImage" style={getStyle()} />
+            {hasChangedStyles && (
+              <div>
+                <button className="resetFilterBtn" onClick={resetStyles}>
+                  Reset filters
+                </button>
+              </div>
+            )}
+          </div>
+        ) : selectedSideNavOption === "Crop" ? (
+          <div className="imageContainer">
+            <Cropper
+              image={imageURL}
+              rotation={rotation}
+              style={{
+                mediaStyle: getStyle(),
+              }}
+              classes={{
+                containerClassName: "easyCropContainer",
+                mediaClassName: "editImage",
+              }}
+              crop={crop}
+              zoom={zoom}
+              aspect={4 / 3}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+              cropShape={cropShape} // disableAutomaticStylesInjection={true}
+              mediaProps={<img />}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </section>
-      <nav className="p-4 bg-gray text-lightgray dark:bg-black dark:text-lightgray">
-        <div className="container flex justify-between h-16 mx-auto md:justify-center">
-          <ul className="items-stretch space-x-3 md:flex">
-            <li className="flex">
-              <a rel="noopener noreferrer" href="#" className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">
-                Link
-              </a>
-            </li>
-            <li className="flex">
-              <a rel="noopener noreferrer" href="#" className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">
-                Link
-              </a>
-            </li>
-            <li className="flex">
-              <a
-                rel="noopener noreferrer"
-                href="#"
-                className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent dark:text-lightblue dark:border-lightblue"
-              >
-                Link
-              </a>
-            </li>
+      <nav className="bottomNav p-4 bg-blue text-lightgray dark:bg-black dark:text-lightgray border-b-2 border-gray">
+        <div
+          className={`container ${""} flex justify-between h-20 mx-auto md:justify-center flex-col items-center w-88 relative`}
+        >
+          <ul className="items-stretch space-x-3 md:flex flex flex-col">
+            <div className="flex space-x-5">
+              {selectedSideNavOption === "Adjust" &&
+                Object.keys(bottomOption).map((item, index) => {
+                  return (
+                    <li
+                      className={`edit-item ${
+                        item === selectedBottomOption ? "active" : ""
+                      }`}
+                    >
+                      <b className="curve leftCurve"></b>
+                      <b className="curve rightCurve"></b>
+                      <BottomAdjustItem
+                        key={index}
+                        name={item}
+                        active={item === selectedBottomOption}
+                        handleClick={() => setSelectedBottomOption(item)}
+                      />
+                    </li>
+                  );
+                })}
+            </div>
+            {selectedSideNavOption === "Adjust" && (
+              <div className="flex justify-center ">
+                <Slider
+                  min={bottomOption[selectedBottomOption]?.range?.min}
+                  max={bottomOption[selectedBottomOption]?.range?.max}
+                  value={bottomOption[selectedBottomOption]?.value}
+                  name={selectedBottomOption}
+                  handleChange={handleSliderChange}
+                />
+              </div>
+            )}
           </ul>
+          {selectedSideNavOption === "Crop" && (
+            <div className="cropOptionsContainer">
+              <CropSlider
+                handleRotateChange={handleCropChange}
+                handleZoomChange={handleZoomChange}
+                rotateValue={rotation}
+                zoomValue={zoom}
+              />
+
+              <div className="cropBtnsContainer flex flex-col justify-center items-center">
+                <button className="cropOptionBtn" onClick={showCroppedImage}>
+                  Crop
+                </button>
+                <button className="cropOptionBtn" onClick={showCroppedImage}>
+                  Shape
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
     </>

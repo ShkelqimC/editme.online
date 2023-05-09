@@ -6,7 +6,7 @@ const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 const Home = () => {
   const [file, setFile] = useState(null);
-
+  // const img = useSelector((state) => state.editor.image);
   useEffect(() => {
     let fileReader,
       isCancel = false;
@@ -34,12 +34,14 @@ const Home = () => {
       <article className=" h-screen flex align-center justify-center">
         <div className="container flex flex-col items-center px-5 py-16 mx-auto lg:px-20 lg:py-24 md:flex-row">
           <div className="flex flex-col items-center w-full pt-0 mb-16 text-left lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 md:items-start md:text-left md:mb-0 lg:text-center">
-            <h2 className="mb-1 text-xs font-medium tracking-widest">Atomic Way To Edit Images</h2>
+            <h2 className="mb-1 text-xs font-medium tracking-widest">
+              Atomic Way To Edit Images
+            </h2>
             <h1 className="mb-8 text-2xl font-bold tracking-tighter text-center  lg:text-left lg:text-5xl">
-            Editme.online is a new way to edit your images
+              Editme.online is a new way to edit your images
             </h1>
             <div className="font-montserrat font-extrabold leading-10 border-b-2 border-coral">
-           Easy, Free, and Online
+              Easy, Free, and Online
             </div>
           </div>
           <div className="w-5/6 lg:max-w-lg lg:w-full md:w-1/2">
@@ -52,15 +54,33 @@ const Home = () => {
       {/* Start Hero*/}
       <article className="p-5 mx-auto sm:p-10 md:p-16">
         <div className="flex flex-col max-w-3xl mx-auto overflow-hidden rounded">
-          <img src="/img/home-image-1.jpg" alt="editme online" className="w-full h-60 sm:h-96" />
+          <img
+            src="/img/home-image-1.jpg"
+            alt="editme online"
+            className="w-full h-60 sm:h-96"
+          />
           <div className="p-6 pb-12 m-4 mx-auto -mt-16 space-y-6 lg:max-w-2xl sm:px-10 sm:mx-12 lg:rounded-md ">
             <div className="space-y-2">
-              <Link to="/getintouch" className="inline-block text-2xl font-semibold sm:text-3xl hover:text-white">
-            <span className="text-lightgray"> Are you tired of using clunky image editing </span> software that slows you down and limits your creativity?
-              </Link>            
+              <Link
+                to="/getintouch"
+                className="inline-block text-2xl font-semibold sm:text-3xl hover:text-white"
+              >
+                <span className="text-lightgray">
+                  {" "}
+                  Are you tired of using clunky image editing{" "}
+                </span>{" "}
+                software that slows you down and limits your creativity?
+              </Link>
             </div>
-            <div >
-              <p> Look no further than Editme.online, the ultimate online photo editor that will revolutionize the way you edit images. With its sleek and modern design, Editme's hero section welcomes you to a world of endless possibilities, where you can edit your photos with ease and precision.</p>
+            <div>
+              <p>
+                {" "}
+                Look no further than Editme.online, the ultimate online photo
+                editor that will revolutionize the way you edit images. With its
+                sleek and modern design, Editme's hero section welcomes you to a
+                world of endless possibilities, where you can edit your photos
+                with ease and precision.
+              </p>
             </div>
           </div>
         </div>
@@ -72,13 +92,19 @@ const Home = () => {
         <div>
           <div className="container flex flex-col items-center px-4 py-16 pb-24 mx-auto text-center lg:pb-56 md:py-32 md:px-10 lg:px-32  ">
             <h1 className="text-5xl font-bold leading-none sm:text-6xl xl:max-w-3xl ">
-            Try Editme.online today and experience the magic of seamless image editing at your fingertips.
+              Try Editme.online today and experience the magic of seamless image
+              editing at your fingertips.
             </h1>
             <p className="mt-6 mb-8 text-lg sm:mb-12 xl:max-w-3xl ">
-            Whether you need to crop, resize, or add filters to your images, Editme's intuitive interface and advanced editing tools have got you covered.
+              Whether you need to crop, resize, or add filters to your images,
+              Editme's intuitive interface and advanced editing tools have got
+              you covered.
             </p>
             <div className="flex justify-center">
-              <Link to="/edit" className="px-8 py-3 m-2 text-lg border rounded hover:text-white">
+              <Link
+                to="/edit"
+                className="px-8 py-3 m-2 text-lg border rounded hover:text-white"
+              >
                 Start Using
               </Link>
             </div>
@@ -99,17 +125,28 @@ const Home = () => {
             <span className="text-sm">Basic</span>
             <p className="text-5xl font-bold text-center">Free</p>
             <p className="font-semibold text-center">
-              Start using Editme.online for free today and experience the magic of seamless image editing at your fingertips.
+              Start using Editme.online for free today and experience the magic
+              of seamless image editing at your fingertips.
             </p>
-            <Link to="/edit" className="px-8 py-3 mt-6 text-lg font-semibold rounded sm:mt-12 hover:text-white">No Need Sign up</Link>
+            <Link
+              to="/edit"
+              className="px-8 py-3 mt-6 text-lg font-semibold rounded sm:mt-12 hover:text-white"
+            >
+              No Need Sign up
+            </Link>
           </div>
           <div className="flex flex-col items-center justify-center flex-1 p-4 pb-8 text-center rounded-md sm:p-8 lg:p-16 ">
             <span className="text-sm font-semibold">Advanced</span>
             <p className="text-5xl font-bold">Buy a Coffee</p>
             <p className="font-semibold">
-              For more advanced features, you can buy a coffee for us. We will be very happy.
+              For more advanced features, you can buy a coffee for us. We will
+              be very happy.
             </p>
-            <Link to="/register" type="button" className="px-8 py-3 mt-6 text-lg font-semibold rounded sm:mt-12 border hover:text-white">
+            <Link
+              to="/register"
+              type="button"
+              className="px-8 py-3 mt-6 text-lg font-semibold rounded sm:mt-12 border hover:text-white"
+            >
               Sign up
             </Link>
           </div>
@@ -142,11 +179,14 @@ const Home = () => {
             <h2 className="mb-5 font-sans text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none">
               Everything you need
               <br className="hidden md:block" />
-              to edit is <span className="inline-block text-lightblue">free</span>
+              to edit is{" "}
+              <span className="inline-block text-lightblue">free</span>
             </h2>
             <p className="pr-5 mb-5 text-base md:text-lg">
-              Editme.online is a free online image editor. You can edit your images without any registration. You can crop, resize, add filters, and more.
-            </p>           
+              Editme.online is a free online image editor. You can edit your
+              images without any registration. You can crop, resize, add
+              filters, and more.
+            </p>
           </div>
         </div>
       </article>
@@ -157,9 +197,12 @@ const Home = () => {
         <div className="container px-6 py-12 mx-auto">
           <div className="grid items-center gap-4 xl:grid-cols-5">
             <div className="max-w-2xl mx-auto my-8 space-y-4 text-center xl:col-span-2 xl:text-left">
-              <h2 className="text-4xl font-bold">Some comments from our users</h2>
+              <h2 className="text-4xl font-bold">
+                Some comments from our users
+              </h2>
               <p>
-                They are very happy to use Editme.online. You can also be happy like them.
+                They are very happy to use Editme.online. You can also be happy
+                like them.
               </p>
             </div>
             <div className="p-6 xl:col-span-3">
@@ -167,11 +210,14 @@ const Home = () => {
                 <div className="grid content-center gap-4">
                   <div className="p-6 rounded shadow-md">
                     <p>
-                    "I've been using Editme for a while now and it's made my photo editing process so much smoother! The filters are great and the user-friendly interface makes it easy to navigate."
+                      "I've been using Editme for a while now and it's made my
+                      photo editing process so much smoother! The filters are
+                      great and the user-friendly interface makes it easy to
+                      navigate."
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                       <img
-                         src="/img/user-profile.png"
+                        src="/img/user-profile.png"
                         alt="user"
                         className="w-12 h-12 bg-center bg-cover rounded-full dark:bg-lightgray"
                       />
@@ -183,11 +229,13 @@ const Home = () => {
                   </div>
                   <div className="p-6 rounded shadow-md">
                     <p>
-                    "I love how I can edit my photos on-the-go with Editme. The mobile interface is just as easy to use as the desktop version, and the editing tools are top-notch."
+                      "I love how I can edit my photos on-the-go with Editme.
+                      The mobile interface is just as easy to use as the desktop
+                      version, and the editing tools are top-notch."
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                       <img
-                       src="/img/user-profile.png"
+                        src="/img/user-profile.png"
                         alt="user"
                         className="w-12 h-12 bg-center bg-cover rounded-full dark:bg-lightgray"
                       />
@@ -201,11 +249,13 @@ const Home = () => {
                 <div className="grid content-center gap-4">
                   <div className="p-6 rounded shadow-md ">
                     <p>
-                    "Editme has saved me so much time and hassle when it comes to editing my photos. The range of editing tools is impressive and the results are always high-quality."
+                      "Editme has saved me so much time and hassle when it comes
+                      to editing my photos. The range of editing tools is
+                      impressive and the results are always high-quality."
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                       <img
-                       src="/img/user-profile.png"
+                        src="/img/user-profile.png"
                         alt="user"
                         className="w-12 h-12 bg-center bg-cover rounded-full dark:bg-lightgray"
                       />
@@ -217,7 +267,11 @@ const Home = () => {
                   </div>
                   <div className="p-6 rounded shadow-md ">
                     <p>
-                    "As someone who isn't a professional photographer, I appreciate how Editme makes photo editing accessible and fun for everyone. I've been able to enhance my photos and create beautiful images that I'm proud to share on social media."
+                      "As someone who isn't a professional photographer, I
+                      appreciate how Editme makes photo editing accessible and
+                      fun for everyone. I've been able to enhance my photos and
+                      create beautiful images that I'm proud to share on social
+                      media."
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                       <img
@@ -242,13 +296,23 @@ const Home = () => {
       {/* Start signup */}
       <article className="py-6">
         <div className="container mx-auto flex flex-col items-center justify-center p-4 space-y-8 md:p-10 md:px-24 xl:px-48">
-          <h1 className="text-5xl font-bold leading-none text-center">Sign up now</h1>
+          <h1 className="text-5xl font-bold leading-none text-center">
+            Sign up now
+          </h1>
           <p className="text-xl font-medium text-center">
-           For more editme.online features and benefits sign up now. It's free! 
+            For more editme.online features and benefits sign up now. It's free!
           </p>
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
-            <Link to="/edit" className="px-8 py-3 text-lg font-semibold rounded hover:text-white">Free Editor</Link>
-            <Link to="register" className="px-8 py-3 text-lg font-normal border rounded hover:text-white">
+            <Link
+              to="/edit"
+              className="px-8 py-3 text-lg font-semibold rounded hover:text-white"
+            >
+              Free Editor
+            </Link>
+            <Link
+              to="register"
+              className="px-8 py-3 text-lg font-normal border rounded hover:text-white"
+            >
               Register
             </Link>
           </div>

@@ -2,11 +2,20 @@ import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Edit } from "../pages/Edit/Edit";
 import { v4 as uuidv4 } from "uuid";
+import { zustandstore } from "../app/store";
 
 export function DragDropImage() {
+  const [imageURL, imageData, setImageURL, setImageData] = zustandstore(
+    (state) => [
+      state.imageURL,
+      state.imageData,
+      state.setImageURL,
+      state.setImageData,
+    ]
+  );
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const [imageData, setImageData] = useState({});
+  // const [imageData, setImageData] = useState({});
   const inputRef = useRef();
   const navigate = useNavigate();
 
@@ -15,8 +24,8 @@ export function DragDropImage() {
   };
 
   useEffect(() => {
+    debugger;
     if (imageUrl !== null) {
-      debugger;
       navigate(`/Edit/${imageData.id}`, {
         state: {
           data: imageData,
@@ -25,21 +34,15 @@ export function DragDropImage() {
     }
   }, [imageData, imageUrl, navigate]);
 
-  const handleUpload = (event) => {
+  async function handleUpload(event) {
     const uploadedImage = event.target.files[0];
-    const imgUrl = URL.createObjectURL(event.target.files[0]);
-    debugger;
-    setImage(uploadedImage);
-    setImageUrl(imgUrl);
-    setImageData((prevImageData) => {
-      return {
-        ...prevImageData,
-        id: uuidv4(),
-        url: imgUrl,
-        img: uploadedImage,
-      };
+    var imgUrl = URL.createObjectURL(event.target.files[0]);
+    setImageData({
+      id: uuidv4(),
+      url: imgUrl,
+      img: uploadedImage,
     });
-    // setImageURL(imgUrl);
+    setImageURL(imgUrl);
     setImage(uploadedImage);
     setImageUrl(imgUrl);
     // setImageData((prevImageData) => {
@@ -52,7 +55,7 @@ export function DragDropImage() {
     // });
   }
   console.log(imageData, "imageData");
-  // console.log(imageURL, "imageURL");
+  console.log(imageURL, "imageURL");
 
   const handleDrop = (event) => {
     event.preventDefault();
