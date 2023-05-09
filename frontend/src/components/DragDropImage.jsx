@@ -24,7 +24,7 @@ export function DragDropImage() {
   };
 
   useEffect(() => {
-    debugger;
+    // debugger;
     if (imageUrl !== null) {
       navigate(`/Edit/${imageData.id}`, {
         state: {
@@ -54,8 +54,8 @@ export function DragDropImage() {
     //   };
     // });
   }
-  console.log(imageData, "imageData");
-  console.log(imageURL, "imageURL");
+  // console.log(imageData, "imageData");
+  // console.log(imageURL, "imageURL");
 
   const handleDrop = (event) => {
     event.preventDefault();
