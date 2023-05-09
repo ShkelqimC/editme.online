@@ -1,49 +1,19 @@
 import React from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../../_store";
+import { history } from "../../../_helpers";
 
 const ListUsers = () => {
-  const users = [
-    {
-      id: 1,
-      firstName: "John",
-      lastName: "Doe",
-      email: "johndoe@example.com",
-      role: "User",
-      created: "2023-05-01T17:42:40.158Z",
-      updated: "2023-05-01T17:42:40.158Z",
-      isVerified: true,
-    },
-    {
-      id: 2,
-      firstName: "Bob",
-      lastName: "Smith",
-      email: "bobsmith@editme.online",
-      role: "Admin",
-      created: "2023-05-01T17:42:40.158Z",
-      updated: "2023-05-01T17:42:40.158Z",
-      isVerified: true,
-    },
-    {
-      id: 3,
-      firstName: "Sheki",
-      lastName: "Johnson",
-      email: "shekijohnson@example.com",
-      role: "User",
-      created: "2023-05-01T17:42:40.158Z",
-      updated: "2023-05-01T17:42:40.158Z",
-      isVerified: false,
-    },
-    {
-      id: 3,
-      firstName: "Xenol",
-      lastName: "M.",
-      email: "xenolm@example.com",
-      role: "User",
-      created: "2023-05-01T17:42:40.158Z",
-      updated: "2023-05-01T17:42:40.158Z",
-      isVerified: false,
-    },
-  ];
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(userActions.getAll());
+  }, [dispatch]);
+  const list = useSelector((x) => x.users?.list);
+  const loading = useSelector((x) => x.users?.loading);
   const handleEditUser = (id) => {
+    history.navigate(`/dashboard/admin/addedituser/${id}`);
     console.log(`Editing user with ID ${id}`);
   };
 
@@ -51,13 +21,18 @@ const ListUsers = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
 
     if (confirmDelete) {
+      dispatch(userActions.delete(id));
       console.log(`Deleting user with ID ${id}`);
     }
   };
+ 
+  if (loading) {
+    return <div className="text-center">Loading...</div>;
+  }
   return (
-    <div className="container p-2 mx-auto sm:p-4">
+    <div className="container text-center py-2 mx-auto sm:py-4">
       <h2 className="mb-4 text-2xl font-semibold leading-tight">User List</h2>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto md:mx-16">
         <table className="min-w-full text-xs">
           <thead className="bg-gray text-lightblack dark:bg-gray ">
             <tr className="text-left">
@@ -73,34 +48,34 @@ const ListUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr className="border-b border-opacity-20 even:bg-slate-300 dark:even:bg-slate-700">
+            {list?.map((user, index) => (
+              <tr className="border-b border-opacity-20 even:bg-slate-300 dark:even:bg-slate-700" key={index}>
                 <>
                   <td className="p-3">
-                    <p>{user.id}</p>
+                    <p>{user?.id}</p>
                   </td>
                   <td className="p-3">
-                    <p>{user.firstName}</p>
+                    <p>{user?.firstName}</p>
                   </td>
                   <td className="p-3">
-                    <p>{user.lastName}</p>
+                    <p>{user?.lastName}</p>
                   </td>
                   <td className="p-3">
-                    <p>{user.email}</p>
+                    <p>{user?.email}</p>
                   </td>
                   <td className="p-3 ">
-                    <p>{user.role}</p>
+                    <p>{user?.role}</p>
                   </td>
                   <td className="p-3">
-                    <p>{user.created?.split("T")[0]}</p>
+                    <p>{user?.created?.split("T")[0]}</p>
                   </td>
-                  <td className="p-3">{user.updated?.split("T")[0]}</td>
-                  <td className="p-3 text-center">{user.isVerified?"Yes":"No"}</td>
+                  <td className="p-3">{user?.updated === null || user?.updated === undefined ? "Not Updated" : user?.updated}</td>
+                  <td className="p-3 text-center">{user?.isVerified ? "Yes" : "No"}</td>
                   <td className="p-3">
                     <button
                       type="button"
                       className="text-green-800 hover:text-green-700 focus:outline-none mx-2"
-                      onClick={() => handleEditUser(user.id)}
+                      onClick={() => handleEditUser(user?.id)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +95,7 @@ const ListUsers = () => {
                     <button
                       type="button"
                       className="text-red-500 hover:text-red-700 focus:outline-none"
-                      onClick={() => handleDeleteUser(user.id)}
+                      onClick={() => handleDeleteUser(user?.id)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

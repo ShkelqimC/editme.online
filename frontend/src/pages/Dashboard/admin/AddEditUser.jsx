@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import {  useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -6,17 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 // TODO: register/edit user action store
 // TODO: find user if edit user(check history path) if not create new user
-import { registerUser } from "../../../_store";
+import { registerUser, userActions } from "../../../_store";
 
 const AddEditUser = () => {
-  const auth = useSelector((x) => x.auth?.auth);
-
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   console.log("pathname", pathname);
-  console.log("navigate(-1)", navigate(-1));
-  // form validation rules
+  
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().uppercase(),
     lastName: Yup.string().uppercase(),
@@ -25,7 +21,7 @@ const AddEditUser = () => {
     repassword: Yup.string()
       .required("Confirm Password is required")
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
-    role: Yup.array(),
+    role: Yup.array().nullable(),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
   // get functions to build form with useForm() hook
@@ -34,7 +30,7 @@ const AddEditUser = () => {
 
   const onSubmit = ({ firstName, lastName, email, password, repassword, role }) => {
     // TODO change register with user/register
-    dispatch(registerUser({ firstName, lastName, email, password, repassword, role }));
+    dispatch(userActions.register({ firstName, lastName, email, password, repassword, role }));
     // TODO: tostify success
   };
   return (

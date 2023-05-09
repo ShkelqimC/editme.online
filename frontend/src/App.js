@@ -52,7 +52,9 @@ function App() {
                     <Route path="/dashboard/index" element={<TotalStats />} />
                     <Route path="/dashboard/graph" element={<Graph />} />
                     <Route path="/dashboard/listuser" element={<ListUsers />} />
-                    <Route path="/dashboard/addedituser" element={<AddEditUser />} />
+                    <Route path="/dashboard/addedituser" element={<AddEditUser />} >
+                      <Route index path=":id?" element={<AddEditUser />} />
+                    </Route>
                   </>
                 ) : (
                   <>

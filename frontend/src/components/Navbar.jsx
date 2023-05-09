@@ -9,19 +9,12 @@ import { history } from "../_helpers/history";
 export const Navbar = () => {
   const ref = useRef();
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedin, setIsLoggedin] = useState(false);
   const [dropdown, setDropdown] = useState(false);
-  // const user = useSelector((state) => state?.userData?.user);
 
   const auth = useSelector((x) => x.auth?.auth);
-  // console.log("auth", auth);
   const dispatch = useDispatch();
 
-  //check auth is exist or not
-  useEffect(() => {
-    if (auth) setIsLoggedin(true);
-    else setIsLoggedin(false);
-  }, [auth]);
+
 
   const handleLogOut = useCallback(() => {
     dispatch(logout());
@@ -152,9 +145,6 @@ export const Navbar = () => {
                 className={`absolute top-14 right-4 mt-2 z-50 my-4 text-lightblack list-none bg-white border-2 divide-y divide-lightblack rounded-lg shadow dark:bg-black dark:divide-lightgray ${
                   dropdown ? "block" : "hidden"
                 }`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
                 id="user-dropdown"
               >
                 <div className="px-4 py-3">
@@ -210,7 +200,7 @@ export const Navbar = () => {
             </svg>
           </button>
         </div>
-        <div className={`items-center justify-between ${isOpen === true ? "hidden" : ""} w-full md:flex md:w-auto md:order-1`}>
+        <div className={`items-center justify-between ${isOpen? "" : "hidden"} w-full md:flex md:w-auto md:order-1`}>
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0">
             {navItems.map((item, index) => (
               <li key={index}>
