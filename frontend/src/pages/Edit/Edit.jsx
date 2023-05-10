@@ -29,13 +29,13 @@ const sideNavbar = [
     icon: "",
   },
   {
-    name: "Resolation",
-    path: "#resolation",
+    name: "Text",
+    path: "#text",
     icon: "",
   },
   {
-    name: "Text",
-    path: "#text",
+    name: "Resolation",
+    path: "#resolation",
     icon: "",
   },
   {
@@ -508,9 +508,9 @@ export function Edit() {
                 <button className="cropOptionBtn" onClick={showCroppedImage}>
                   Crop
                 </button>
-                <button className="cropOptionBtn" onClick={showCroppedImage}>
+                {/* <button className="cropOptionBtn" onClick={showCroppedImage}>
                   Shape
-                </button>
+                </button> */}
               </div>
             </div>
           )}
