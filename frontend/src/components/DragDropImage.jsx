@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Edit } from "../pages/Edit/Edit";
 import { v4 as uuidv4 } from "uuid";
 import { zustandstore } from "../app/store";
+import ToastMessage from "./Alert";
 
 export function DragDropImage() {
   const [imageURL, imageData, setImageURL, setImageData] = zustandstore(
@@ -20,7 +21,6 @@ export function DragDropImage() {
   const navigate = useNavigate();
 
   const handleDragOver = (event) => {
-    debugger;
     event.preventDefault();
   };
 
@@ -35,9 +35,14 @@ export function DragDropImage() {
     }
   }, [imageData, imageUrl, navigate]);
 
-  async function handleUpload(event) {
-    debugger;
+  async function handleUpload(e, event) {
+    await e.preventDefault();
+
     const uploadedImage = event.files[0];
+    if (!uploadedImage.type.includes("image")) {
+      return ToastMessage("error", "Only images can be uploaded.");
+      debugger;
+    }
     var imgUrl = URL.createObjectURL(event.files[0]);
     setImageData({
       id: uuidv4(),
@@ -73,7 +78,7 @@ export function DragDropImage() {
           onDragOver={(e) => {
             e.preventDefault();
           }}
-          onDrop={(e) => handleUpload(e?.dataTransfer)}
+          onDrop={(e) => handleUpload(e, e?.dataTransfer)}
           // onDrag={""}
           onClick={() => inputRef.current.click()}
         >
@@ -82,7 +87,7 @@ export function DragDropImage() {
           <input
             type="file"
             onChange={(event) => {
-              handleUpload(event.target);
+              handleUpload(event, event.target);
             }}
             hidden
             ref={inputRef}
