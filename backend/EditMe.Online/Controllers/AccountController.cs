@@ -19,7 +19,7 @@ public class AccountController : BaseController
     [HttpPost("authenticate")]
     public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest model)
     {
-        var response = await _accountManager.Authenticate(model/*, IpAddress()*/);
+        var response = await _accountManager.Authenticate(model, IpAddress());
         SetTokenCookie(response.RefreshToken);
         return Ok(response);
     }
@@ -29,7 +29,7 @@ public class AccountController : BaseController
     public async Task<ActionResult<AuthenticateResponse>> RefreshToken()
     {
         var refreshToken = Request.Cookies["refreshToken"];
-        var response = await _accountManager.RefreshToken(refreshToken/*, IpAddress()*/);
+        var response = await _accountManager.RefreshToken(refreshToken,IpAddress());
         SetTokenCookie(response.RefreshToken);
         return Ok(response);
     }
@@ -47,7 +47,7 @@ public class AccountController : BaseController
         if (!Account.OwnsToken(token) && Account.Role != Role.Admin)
             return Unauthorized(new { message = "Unauthorized" });
 
-        await  _accountManager.RevokeToken(token/*, IpAddress()*/);
+        await  _accountManager.RevokeToken(token,IpAddress());
         return Ok(new { message = "Token revoked" });
     }
 
@@ -55,7 +55,7 @@ public class AccountController : BaseController
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest model)
     {
-        await _accountManager.Register(model/*, Request.Headers["origin"]*/);
+        await _accountManager.Register(model, Request.Headers["origin"]);
         return Ok(new { message = "Registration successful, please check your email for verification instructions" });
     }
 
@@ -70,14 +70,14 @@ public class AccountController : BaseController
     [HttpPost("resend-verify-email")]
     public async Task<IActionResult> ResendVerifyEmailAsync(ForgotPasswordRequest model)
     {
-        await _accountManager.ResendVerifyEmail(model/*, Request.Headers["origin"]*/);
+        await _accountManager.ResendVerifyEmail(model, Request.Headers["origin"]);
         return Ok(new { message = "Verify Email sended again, please check your email for verification instructions" });
     }
     [AllowAnonymous]
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest model)
     {
-        await _accountManager.ForgotPassword(model/*, Request.Headers["origin"]*/);
+        await _accountManager.ForgotPassword(model, Request.Headers["origin"]);
         return Ok(new { message = "Please check your email for password reset instructions" });
     }
 
@@ -161,11 +161,11 @@ public class AccountController : BaseController
         Response.Cookies.Append("refreshToken", token, cookieOptions);
     }
 
-    //private string IpAddress()
-    //{
-    //    if (Request.Headers.ContainsKey("X-Forwarded-For"))
-    //        return Request.Headers["X-Forwarded-For"];
-    //    else
-    //        return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-    //}
+    private string IpAddress()
+    {
+        if (Request.Headers.ContainsKey("X-Forwarded-For"))
+            return Request.Headers["X-Forwarded-For"];
+        else
+            return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+    }
 }

@@ -63,7 +63,7 @@ public class JwtManager : IJwtManager
         }
     }
 
-    public async Task<RefreshToken> GenerateRefreshToken(/*string ipAddress*/)
+    public async Task<RefreshToken> GenerateRefreshToken(string ipAddress)
     {
         var refreshToken = new RefreshToken
         {
@@ -78,7 +78,7 @@ public class JwtManager : IJwtManager
         var tokenIsUnique = !_context.Accounts.Any(a => a.RefreshTokens.Any(t => t.Token == refreshToken.Token));
 
         if (!tokenIsUnique)
-            return await GenerateRefreshToken(/*ipAddress*/);
+            return await GenerateRefreshToken(ipAddress);
 
         return refreshToken;
     }

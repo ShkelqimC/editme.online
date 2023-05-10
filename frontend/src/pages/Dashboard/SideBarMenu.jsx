@@ -18,7 +18,7 @@ const SideBarMenu = ({auth}) => {
   //   if (auth?.role === "Admin") setIsAdmin(true);
   //   else setIsAdmin(false);
   // }, [auth]);
-  console.log("auth", auth);
+  // console.log("auth", auth);
   const sideMenu = [
     {
       name: "Dashboard",
@@ -164,17 +164,17 @@ const SideBarMenu = ({auth}) => {
   ];
 
   return (
-    <div className="p-3 space-y-2 w-60 order-1 border-r-2 text-lightgray  bg-blue">
-      <div className="flex flex-wrap items-center mt-3">
+    <div className="p-3 md:space-y-2 w-screen md:w-60 max-h-24 md:max-h-full order-1 md:border-r-2 text-lightgray  bg-blue col-6 md:col-span-1 row-start-1 ">
+      <div className="flex flex-wrap  items-center md:mt-3">
         <div>
-          <h3 className="text-lg font-semibold">{auth?.firstName}</h3>
+          <h3 className="text-lg font-semibold md:block mr-5">{auth?.firstName}</h3>
         </div>
         <div>
           <h4 className="text-sm font-semibold">{auth?.email}</h4>
         </div>
       </div>
       <div className="divide-y divide-gray-700">
-        <ul className="pt-2 pb-4 space-y-1 text-sm">
+        <ul className="md:pt-2 md:pb-4 md:space-y-1 text-sm flex row-auto md:grid">
           {auth?.role === "Admin"
             ? sideMenu.map((item, index) => (
                 <li key={index}>

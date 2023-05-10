@@ -30,8 +30,9 @@ const Graph = () => {
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 py-8 dark:bg-black">
-      <div className="grid gap-4">
+    <div className="container text-center py-2 mx-auto sm:py-4">
+      <h2 className="mb-4 text-2xl font-semibold leading-tight">Graph</h2>
+      <div className="grid row-span-full place-items-center">
         <div className="bg-white p-4 rounded-lg shadow-md">
           <Bar options={options} data={data} />
         </div>
