@@ -20,6 +20,7 @@ export function DragDropImage() {
   const navigate = useNavigate();
 
   const handleDragOver = (event) => {
+    debugger;
     event.preventDefault();
   };
 
@@ -35,8 +36,9 @@ export function DragDropImage() {
   }, [imageData, imageUrl, navigate]);
 
   async function handleUpload(event) {
-    const uploadedImage = event.target.files[0];
-    var imgUrl = URL.createObjectURL(event.target.files[0]);
+    debugger;
+    const uploadedImage = event.files[0];
+    var imgUrl = URL.createObjectURL(event.files[0]);
     setImageData({
       id: uuidv4(),
       url: imgUrl,
@@ -59,6 +61,8 @@ export function DragDropImage() {
 
   const handleDrop = (event) => {
     event.preventDefault();
+    event.stopPropagation();
+    debugger;
     handleUpload(event);
   };
   return (
@@ -66,8 +70,11 @@ export function DragDropImage() {
       {!imageUrl && (
         <div
           className="text-xl border-dashed border-4 border-gray bg-blue text-lightgray dark:bg-blue w-full h-64 flex flex-col items-center justify-center mx-auto rounded-lg cursor-pointer select-none"
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
+          onDragOver={(e) => {
+            e.preventDefault();
+          }}
+          onDrop={(e) => handleUpload(e?.dataTransfer)}
+          // onDrag={""}
           onClick={() => inputRef.current.click()}
         >
           <h1>Drag and Drop image to upload</h1>
@@ -75,7 +82,7 @@ export function DragDropImage() {
           <input
             type="file"
             onChange={(event) => {
-              handleUpload(event);
+              handleUpload(event.target);
             }}
             hidden
             ref={inputRef}
