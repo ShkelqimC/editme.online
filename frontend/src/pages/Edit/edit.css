@@ -91,7 +91,7 @@
 }
 
 .sidebarItem.active {
-  color: green;
+  font-weight: bold;
 }
 
 .sliderContainer {

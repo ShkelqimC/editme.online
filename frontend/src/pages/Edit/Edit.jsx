@@ -120,6 +120,7 @@ export function Edit() {
     changedValues[selectedBottomOption] = target.value;
     setSliderValue(target.value);
   }
+
   function handleZoomChange({ target, zoom }) {
     setZoom(target.value);
   }
@@ -128,7 +129,6 @@ export function Edit() {
     var filters = Object.values(bottomOption).map(
       (value, index) => `${value.property}(${value.value}${value.unit})`
     );
-
     return { filter: filters.join(" ") };
   }
   const createImage = (url) =>
@@ -314,7 +314,7 @@ export function Edit() {
             </div>
 
             <div className="space-y-2 ">
-              <div className="flex flex-col space-y-5 px-10 text-start">
+              <div className="flex flex-col space-y-3 px-10 text-start text-xl ">
                 {sideNavbar.map((item, index) => {
                   return (
                     <SideNavbarItem
@@ -422,6 +422,7 @@ export function Edit() {
         {selectedSideNavOption === "Adjust" ? (
           <div className="imageContainer">
             <img src={imageURL} className="editImage" style={getStyle()} />
+
             {hasChangedStyles && (
               <div>
                 <button className="resetFilterBtn" onClick={resetStyles}>
